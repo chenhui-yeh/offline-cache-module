@@ -30,11 +30,14 @@ public class Camera {
     @Expose
     private String serial;
 
-    public Camera(@NonNull String id, String name, String jumboId, String serial) {
+    private String groupId;
+
+    public Camera(@NonNull String id, String name, String jumboId, String serial, String groupId) {
         this.id = id;
         this.name = name;
         this.jumboId = jumboId;
         this.serial = serial;
+        this.groupId = groupId;
     }
 
     @NonNull
@@ -68,6 +71,14 @@ public class Camera {
 
     public void setSerial(String serial) {
         this.serial = serial;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 }
 

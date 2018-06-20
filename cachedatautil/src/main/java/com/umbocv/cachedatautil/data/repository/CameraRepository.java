@@ -7,7 +7,7 @@ import com.umbocv.cachedatautil.data.model.Camera;
 import java.util.List;
 
 public interface CameraRepository {
-    LiveData<List<Camera>> loadCameras();
+    LiveData<List<Camera>> loadCameras(String authToken);
 
     void saveCamera(Camera camera);
 

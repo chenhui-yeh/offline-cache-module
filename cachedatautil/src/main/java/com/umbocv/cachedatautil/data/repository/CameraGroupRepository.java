@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CameraGroupRepository {
 
-    LiveData<List<CameraGroup>> loadCameraGroups();
+    LiveData<List<CameraGroup>> loadCameraGroups(String authToken);
 
     void deleteCameraGroup(CameraGroup cameraGroup);
 

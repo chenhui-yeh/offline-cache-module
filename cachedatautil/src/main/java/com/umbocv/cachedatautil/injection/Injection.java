@@ -16,17 +16,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Injection {
     private static final String TAG = "Injection";
 
-    private static OkHttpClient okHttpClient;
     private static RemoteWebService sRemoteWebService;
     private static Retrofit retrofit;
     private static final String BASE_URL = "https://api-rc.umbocv.com/api/locations/";
 
     private static AppDatabase appDatabase;
     private static AppExecutor executor;
-
-//    public static void init() {
-//
-//    }
 
     public static Repository provideRepository(Context context) {
         sRemoteWebService = provideRemoteDataSource();

@@ -53,6 +53,7 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         downloadedCameras = new MutableLiveData<>();
     }
 
+    /** initializes once per app lifetime*/
     public synchronized void initializeData(String authToken) {
         if (initialized) return;
         initialized = true;
@@ -60,27 +61,37 @@ public class Repository implements CameraRepository, CameraGroupRepository {
 
         LiveData<List<CameraGroup>> networkCameraGroups = downloadedCameraGroups;
         LiveData<List<Camera>> networkCameras = downloadedCameras;
+        fetchData(authToken);
         networkCameraGroups.observeForever((List<CameraGroup> newCameraGroups) -> {
             executor.diskIO().execute(()->{
                 CameraGroup[] groupArray = newCameraGroups.toArray(new CameraGroup[0]);
                 appDatabase.cameraGroupDao().saveCameraGroup(groupArray);
-                Log.d(TAG, "initializeData: saved camera group");
+//                for (int i = 0; i < newCameraGroups.size(); i++) {
+//                    // appDatabase.cameraGroupDao().saveCameraGroup(newCameraGroups.get(i));
+//                    Log.d(TAG, "initializeData: saved camera group " + groupArray[i].getName());
+//                }
+
             });
         });
         networkCameras.observeForever((List<Camera> newCameras) -> {
             executor.diskIO().execute(() -> {
                 Camera[] cameraArray = newCameras.toArray(new Camera[0]);
                 appDatabase.cameraDao().saveCamera(cameraArray);
-                Log.d(TAG, "initializeData: saved camera");
+//                for (int i = 0; i < newCameras.size(); i++) {
+//                    //appDatabase.cameraDao().saveCamera(newCameras.get(i));
+////                    Log.d(TAG, "initializeData: saved camera " + appDatabase.cameraDao().loadCameraById(newCameras.get(i).getId()).getValue().getName());
+//                }
+
             });
         });
 
-        fetchData(authToken);
+
 
     }
 
     @Override
-    public LiveData<List<Camera>> loadCameras() {
+    public LiveData<List<Camera>> loadCameras(String authToken) {
+        fetchData(authToken);
         return appDatabase.cameraDao().loadCameras();
     }
 
@@ -99,7 +110,8 @@ public class Repository implements CameraRepository, CameraGroupRepository {
     }
 
     @Override
-    public LiveData<List<CameraGroup>> loadCameraGroups() {
+    public LiveData<List<CameraGroup>> loadCameraGroups(String authToken) {
+        fetchData(authToken);
         return appDatabase.cameraGroupDao().loadCameraGroups();
     }
 
@@ -134,12 +146,14 @@ public class Repository implements CameraRepository, CameraGroupRepository {
                     Log.d(TAG, "onResponse: entered loop");
                     CameraGroup newGroup = new CameraGroup(newGroups[i].getId(),newGroups[i].getName(), newGroups[i].getTimezone());
                     groupList.add(newGroup);
+                    String groupId = newGroup.getId();
                     Log.d(TAG, "onResponse: " + newGroups[i].getTimezone());
                     for (int j = 0; j < newGroups[i].getCameras().length; j++) {
                         Log.d(TAG, "onResponse: entered second loop");
                         Camera newCamera = newGroups[i].getCameras()[j];
+                        newCamera.setGroupId(groupId);
                         cameraList.add(newCamera);
-                        Log.d(TAG, "onResponse: " + newCamera.getName());
+                        Log.d(TAG, "onResponse: name: " + newCamera.getName() + "\n group: " + newCamera.getGroupId());
                     }
                 }
                 downloadedCameraGroups.postValue(groupList); // update data
