@@ -8,7 +8,6 @@ import com.umbocv.cachedatautil.data.local.AppDatabase;
 import com.umbocv.cachedatautil.data.remote.RemoteWebService;
 import com.umbocv.cachedatautil.data.repository.Repository;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

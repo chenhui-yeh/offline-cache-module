@@ -9,7 +9,7 @@ import android.support.test.InstrumentationRegistry;
 import com.umbocv.cachedatautil.AppExecutor;
 import com.umbocv.cachedatautil.data.local.AppDatabase;
 import com.umbocv.cachedatautil.data.model.CameraGroup;
-import com.umbocv.cachedatautil.data.remote.RemoteDataSource;
+import com.umbocv.cachedatautil.data.remote.RemoteWebService;
 import com.umbocv.cachedatautil.data.repository.Repository;
 import com.umbocv.cachedatautil.injection.Injection;
 
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class RepositoryTest {
 
     AppDatabase appDatabase;
-    RemoteDataSource remoteDataSource;
+    RemoteWebService remoteDataSource;
     AppExecutor appExecutor;
 
     private Repository mRepository;
@@ -43,15 +43,15 @@ public class RepositoryTest {
         remoteDataSource = Injection.provideRemoteDataSource();
         appExecutor = AppExecutor.getInstance();
 
-        mRepository = Repository.getInstance(remoteDataSource, appDatabase, appExecutor);
+        mRepository = Repository.getInstance(remoteDataSource, appDatabase, appExecutor, InstrumentationRegistry.getTargetContext());
     }
 
     @Test
     public void saveFromWeb_invokeCorrectApiCalls() {
         String authToken = anyString();
-        when(remoteDataSource.cameraDataSource()
+        when(remoteDataSource
                 .getCameraResponse(authToken))
-                .thenReturn(remoteDataSource.cameraDataSource().getCameraResponse(authToken));
+                .thenReturn(remoteDataSource.getCameraResponse(authToken));
     }
 
     private List<CameraGroup> cameraGroupList () {

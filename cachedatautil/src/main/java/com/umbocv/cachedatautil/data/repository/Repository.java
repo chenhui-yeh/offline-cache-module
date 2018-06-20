@@ -62,7 +62,7 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         downloadedCameras = new MutableLiveData<>();
     }
 
-    /** initializes once per app lifetime*/
+
     public synchronized void initializeData(String authToken) {
         if (initialized) return;
         initialized = true;
@@ -71,20 +71,14 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         LiveData<List<CameraGroup>> networkCameraGroups = downloadedCameraGroups;
         LiveData<List<Camera>> networkCameras = downloadedCameras;
 
-        // fetch data from web the first time
-        if (isNetworkAvailable()){
-            Log.d(TAG, "initializeData: network connected");
-            fetchData(authToken);
-        }
-        
-
-        /** observing data: camera groups and cameras
-         * will be updated by postValue() in fetchData() method
-         * */
+        // observing data: camera groups and camera will be updated by postValue() each time
+        // fetchData() method is called
         networkCameraGroups.observeForever((List<CameraGroup> newCameraGroups) -> {
             executor.diskIO().execute(()->{
+
 //                CameraGroup[] groupArray = newCameraGroups.toArray(new CameraGroup[0]);
 //                appDatabase.cameraGroupDao().saveCameraGroup(groupArray);
+
                 if (newCameraGroups != null) {
                     for (int i = 0; i < newCameraGroups.size(); i++) {
                         // saving camera groups to database
@@ -103,29 +97,36 @@ public class Repository implements CameraRepository, CameraGroupRepository {
 //                appDatabase.cameraDao().saveCamera(cameraArray);
                 if (newCameras != null) {
                     for (int i = 0; i < newCameras.size(); i++) {
-                    // saving cameras to database
+                        // saving cameras to database
                         appDatabase.cameraDao().saveCamera(newCameras.get(i));
                         Log.d(TAG, "initializeData: saved camera " + newCameras.get(i).getName() + "\n jumbo id: " + newCameras.get(i).getJumboId());
                     }
                 } else {
                     Log.d(TAG, "initializeData: no cameras in account");
                 }
-
             });
         });
 
-
-
+        // fetch data from web the first time
+        if (isNetworkAvailable()){
+            Log.d(TAG, "initializeData: network connected");
+            fetchData(authToken);
+        }
     }
 
+    //-------------------database operations --------------------//
+
+    // Cameras
     @Override
     public LiveData<List<Camera>> loadCameras(String authToken) {
-        // check network status
+        // checking network status
         if (isNetworkAvailable()) {
             Log.d(TAG, "loadCameras: network connected");
+            // if connected then fetch from web
             fetchData(authToken);
         }
 
+        // retrieve from persisted data in db
         return appDatabase.cameraDao().loadCameras();
     }
 
@@ -143,14 +144,17 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         });
     }
 
+    //Camera Groups
     @Override
     public LiveData<List<CameraGroup>> loadCameraGroups(String authToken) {
-        // check network status
+        // checking network status
         if (isNetworkAvailable()){
             Log.d(TAG, "loadCameraGroups: network connected");
+            // if connected then fetch from web
             fetchData(authToken);
         }
 
+        // retrieve from persisted data in db
         return appDatabase.cameraGroupDao().loadCameraGroups();
     }
 
@@ -169,7 +173,7 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         });
     }
 
-    /**networking operations */
+    // -------------------networking operations ----------------------//
     public void fetchData(String authToken) {
         Call<CameraGroup[]> call = mRemoteWebService.getCameraResponse(authToken);
         List<CameraGroup> groupList = new ArrayList<CameraGroup>();
@@ -206,11 +210,12 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         });
     }
 
-    // check network status
+
+    /** checks network connection*/
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) this.context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        return activeNetworkInfo != null && activeNetworkInfo.isAvailable() && activeNetworkInfo.isConnected();
     }
 }

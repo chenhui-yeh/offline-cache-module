@@ -42,7 +42,7 @@ public class CameraDaoTest {
 
     @Test
     public void loadCameras_loadCameras_success() throws InterruptedException {
-        Camera newCamera = generalTestCamera("camera id 1", "name 1", "jumbo id 1", "serial 1");
+        Camera newCamera = generalTestCamera("camera id 1", "name 1", "jumbo id 1", "serial 1", "group id");
 
         cameraDao.saveCamera(newCamera);
         List<Camera> cameraRetrieved = getValue(cameraDao.loadCameras());
@@ -52,7 +52,7 @@ public class CameraDaoTest {
 
     @Test
     public void addCamera_SuccessfullyAddCamera() throws InterruptedException {
-        Camera newCamera = generalTestCamera("camera id 1", "name 1", "jumbo id 1", "serial 1");
+        Camera newCamera = generalTestCamera("camera id 1", "name 1", "jumbo id 1", "serial 1", "group id");
 
         cameraDao.saveCamera(newCamera);
 
@@ -64,7 +64,7 @@ public class CameraDaoTest {
 
     @Test
     public void deleteCamera_SuccessfullyDeleteCamera() throws InterruptedException {
-        Camera newCamera = generalTestCamera("camera id 1", "name 1", "jumbo id 1", "serial 1");
+        Camera newCamera = generalTestCamera("camera id 1", "name 1", "jumbo id 1", "serial 1", "group id");
         cameraDao.saveCamera(newCamera);
 
         List<Camera> cameraRetrieved = getValue(cameraDao.loadCameras());
@@ -76,8 +76,8 @@ public class CameraDaoTest {
 
     }
 
-    Camera generalTestCamera (String id, String name, String jumboId, String serial) {
-        return new Camera(id, name, jumboId, serial);
+    Camera generalTestCamera (String id, String name, String jumboId, String serial, String groupId) {
+        return new Camera(id, name, jumboId, serial, groupId);
     }
 
     /**

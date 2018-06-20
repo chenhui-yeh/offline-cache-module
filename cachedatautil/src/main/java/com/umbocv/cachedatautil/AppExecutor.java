@@ -13,6 +13,7 @@ public class AppExecutor{
     // For Singleton instantiation
     private static final Object LOCK = new Object();
     private static AppExecutor sInstance;
+
     private final Executor diskIO;
     private final Executor mainThread;
     private final Executor networkIO;
