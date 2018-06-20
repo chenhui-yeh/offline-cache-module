@@ -28,7 +28,7 @@ public class Injection {
         appDatabase = AppDatabase.getInstance(context.getApplicationContext());
         executor = AppExecutor.getInstance();
         Log.d(TAG, "provideRepository:  made repo");
-        return Repository.getInstance(sRemoteWebService, appDatabase, executor);
+        return Repository.getInstance(sRemoteWebService, appDatabase, executor, context.getApplicationContext());
     }
 
 

@@ -17,6 +17,9 @@ public interface CameraGroupDao {
     @Query("SELECT * FROM camera_groups")
     LiveData<List<CameraGroup>> loadCameraGroups();
 
+    @Query("SELECT * FROM camera_groups WHERE id = :id")
+    LiveData<CameraGroup> loadCameraGroupById(String id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void saveCameraGroup(CameraGroup... cameraGroup);
 

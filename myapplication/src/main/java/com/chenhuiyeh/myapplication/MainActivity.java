@@ -14,6 +14,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Repository repository = Injection.provideRepository(this.getApplicationContext());
-        repository.initializeData("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1MjkzODIyMjMsImV4cCI6MTUyOTQwMDIyM30.jPf1gEDDupQG7VZbM_rU2ARgI4ebAnzxG9crkEnMVRU");
+        repository.initializeData("Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1MjkzODIyMjMsImV4cCI6MTUyOTQwMDIyM30.jPf1gEDDupQG7VZbM_rU2ARgI4ebAnzxG9crkEnMVRU");
     }
 }

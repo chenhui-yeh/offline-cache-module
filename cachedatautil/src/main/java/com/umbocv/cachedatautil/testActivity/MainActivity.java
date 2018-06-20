@@ -1,4 +1,4 @@
-package com.umbocv.cachedatautil;
+package com.umbocv.cachedatautil.testActivity;
 
 import android.arch.lifecycle.LiveData;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +15,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private final String TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1Mjk0NjE2OTUsImV4cCI6MTUyOTQ3OTY5NX0.YVIhzSHla9C4JmePrSyOhQqjmpTfHU9sYDoiM0kRDgg";
+    private final String TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1Mjk0NjgxOTEsImV4cCI6MTUyOTQ4NjE5MX0.vQKPBoiHVL10rxIEQmTdbpyzMcImCVTl_g_gzufPY60";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

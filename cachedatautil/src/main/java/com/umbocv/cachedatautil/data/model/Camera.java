@@ -20,12 +20,14 @@ public class Camera {
     @NonNull
     private String id;
 
-    @SerializedName("jumboId")
-    @Expose
-    private String name;
     @SerializedName("name")
     @Expose
+    private String name;
+
+    @SerializedName("jumboId")
+    @Expose
     private String jumboId;
+
     @SerializedName("serial")
     @Expose
     private String serial;

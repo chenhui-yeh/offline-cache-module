@@ -27,12 +27,23 @@ public abstract class AppDatabase extends RoomDatabase {
         if (sInstance == null) {
             synchronized (LOCK) {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
-                        AppDatabase.class, AppDatabase.DATABASE_NAME).build();
+                        AppDatabase.class, AppDatabase.DATABASE_NAME)
+//                        .addMigrations()
+                        .build();
                 Log.d(LOG_TAG, "Made new database");
             }
         }
         return sInstance;
     }
+
+    // sample migration
+//    static final Migration FROM_1_TO_2 = new Migration(1, 2) {
+//        @Override
+//        public void migrate(final SupportSQLiteDatabase database) {
+//            database.execSQL("ALTER TABLE Repo
+//                    ADD COLUMN createdAt TEXT");
+//        }
+//    };
 
 
 }
