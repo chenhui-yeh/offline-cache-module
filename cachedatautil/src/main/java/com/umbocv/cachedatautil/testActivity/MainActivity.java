@@ -18,6 +18,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Repository repository = Injection.provideRepository(this);
         repository.initializeData(TOKEN);
-        //repository.loadCameras(TOKEN);
+        repository.loadCameras(TOKEN);
     }
 }

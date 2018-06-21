@@ -133,6 +133,7 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         }
 
         // retrieve from persisted data in db
+        Log.d(TAG, "loadCameras: loaded from db");
         return appDatabase.cameraDao().loadCameras();
     }
 

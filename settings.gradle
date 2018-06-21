@@ -1,1 +1,1 @@
-include ':cachedatautil', ':myapplication'
+include ':cachedatautil'
