@@ -1,4 +1,4 @@
-package com.chenhuiyeh.myapplication;
+package com.umbocv.myapplication;
 
 import org.junit.Test;
 

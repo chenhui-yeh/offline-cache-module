@@ -1,4 +1,4 @@
-package com.chenhuiyeh.myapplication.data.local;
+package com.umbocv.cachedatautil.data.local;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
@@ -6,9 +6,6 @@ import android.arch.persistence.room.Room;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 
-
-import com.umbocv.cachedatautil.data.local.AppDatabase;
-import com.umbocv.cachedatautil.data.local.CameraDao;
 import com.umbocv.cachedatautil.data.model.Camera;
 
 import org.junit.Before;
