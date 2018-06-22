@@ -89,11 +89,12 @@ public class Repository implements CameraRepository, CameraGroupRepository {
                     for (int i = 0; i < newCameraGroups.size(); i++) {
                         // saving camera groups to database
                         appDatabase.cameraGroupDao().saveCameraGroup(newCameraGroups.get(i));
-                        Log.d(TAG, "initializeData: saved camera group " + newCameraGroups.get(i).getName());
+//                        Log.d(TAG, "initializeData: saved camera group " + newCameraGroups.get(i).getName());
                     }
-                } else {
-//                    Log.d(TAG, "initializeData: no camera groups in account");
                 }
+//                else {
+//                    Log.d(TAG, "initializeData: no camera groups in account");
+//                }
             });
         });
 
@@ -105,9 +106,10 @@ public class Repository implements CameraRepository, CameraGroupRepository {
                         appDatabase.cameraDao().saveCamera(newCameras.get(i));
 //                        Log.d(TAG, "initializeData: saved camera " + newCameras.get(i).getName() + "\n jumbo id: " + newCameras.get(i).getJumboId());
                     }
-                } else {
-//                    Log.d(TAG, "initializeData: no cameras in account");
                 }
+//                else {
+//                    Log.d(TAG, "initializeData: no cameras in account");
+//                }
             });
         });
 
