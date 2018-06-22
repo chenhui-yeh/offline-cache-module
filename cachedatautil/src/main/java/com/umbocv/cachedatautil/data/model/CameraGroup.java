@@ -9,6 +9,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import static com.umbocv.cachedatautil.data.model.CameraGroup.TABLE_NAME;
 
+/** CameraGroup class for database and network*/
 @Entity(tableName = TABLE_NAME)
 public class CameraGroup {
     public static final String TABLE_NAME = "camera_groups";

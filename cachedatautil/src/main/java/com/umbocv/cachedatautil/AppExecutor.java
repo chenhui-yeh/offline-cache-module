@@ -3,7 +3,6 @@ package com.umbocv.cachedatautil;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -16,19 +15,26 @@ public class AppExecutor{
 
     private final Executor diskIO;
     private final Executor mainThread;
-    private final Executor networkIO;
+//    private final Executor networkIO;
 
-    private AppExecutor(Executor diskIO, Executor networkIO, Executor mainThread) {
+//    private AppExecutor(Executor diskIO, Executor networkIO, Executor mainThread) {
+//        this.diskIO = diskIO;
+//        this.networkIO = networkIO;
+//        this.mainThread = mainThread;
+//    }
+
+    private AppExecutor(Executor diskIO, Executor mainThread) {
         this.diskIO = diskIO;
-        this.networkIO = networkIO;
         this.mainThread = mainThread;
     }
 
     public static AppExecutor getInstance() {
         if (sInstance == null) {
             synchronized (LOCK) {
-                sInstance = new AppExecutor(Executors.newSingleThreadExecutor(),
-                        Executors.newFixedThreadPool(3),
+//                sInstance = new AppExecutor(Executors.newSingleThreadExecutor(),
+//                        Executors.newFixedThreadPool(3),
+//                        new MainThreadExecutor());
+                sInstance = new AppExecutor(Executors.newFixedThreadPool(2),
                         new MainThreadExecutor());
             }
         }
@@ -43,9 +49,9 @@ public class AppExecutor{
         return mainThread;
     }
 
-    public Executor networkIO() {
-        return networkIO;
-    }
+//    public Executor networkIO() {
+//        return networkIO;
+//    }
 
     private static class MainThreadExecutor implements Executor {
         private Handler mainThreadHandler = new Handler(Looper.getMainLooper());

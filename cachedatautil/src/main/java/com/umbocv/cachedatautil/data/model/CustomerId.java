@@ -3,6 +3,7 @@ package com.umbocv.cachedatautil.data.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+// not used yet
 public class CustomerId {
 
     @SerializedName("_id")

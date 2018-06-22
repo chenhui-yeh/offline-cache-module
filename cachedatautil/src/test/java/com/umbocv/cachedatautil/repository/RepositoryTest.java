@@ -52,7 +52,7 @@ public class RepositoryTest {
                 .build();
 
         appExecutor = AppExecutor.getInstance();
-        remoteDataSource = Injection.provideRemoteDataSource();
+        remoteDataSource = Injection.provideRemoteWebService();
         mRepository = Repository.getInstance(remoteDataSource, appDatabase, appExecutor, InstrumentationRegistry.getTargetContext());
     }
 

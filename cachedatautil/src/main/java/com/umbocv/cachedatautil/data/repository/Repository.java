@@ -41,11 +41,11 @@ public class Repository implements CameraRepository, CameraGroupRepository {
                                          AppDatabase appDatabase,
                                          AppExecutor executor,
                                          Context context) {
-        Log.d(TAG, "getInstance: Getting repository");
+//        Log.d(TAG, "getInstance: Getting repository");
         if (sInstance == null) {
             synchronized (LOCK) {
                 sInstance = new Repository(remoteWebService, appDatabase, executor, context);
-                Log.d(TAG, "getInstance: made new repository");
+//                Log.d(TAG, "getInstance: made new repository");
             }
         }
         return sInstance;
@@ -66,7 +66,7 @@ public class Repository implements CameraRepository, CameraGroupRepository {
 
     public synchronized void initializeData(String authToken) {
         if (initialized) {
-            Log.d(TAG, "initializeData: true");
+//            Log.d(TAG, "initializeData: true");
             return;
         }
         initialized = true;
@@ -81,8 +81,6 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         networkCameraGroups.observeForever((List<CameraGroup> newCameraGroups) -> {
             executor.diskIO().execute(()->{
 
-//                CameraGroup[] groupArray = newCameraGroups.toArray(new CameraGroup[0]);
-//                appDatabase.cameraGroupDao().saveCameraGroup(groupArray);
                 if (newCameraGroups != null) {
                     for (int i = 0; i < newCameraGroups.size(); i++) {
                         // saving camera groups to database
@@ -90,7 +88,7 @@ public class Repository implements CameraRepository, CameraGroupRepository {
                         Log.d(TAG, "initializeData: saved camera group " + newCameraGroups.get(i).getName());
                     }
                 } else {
-                    Log.d(TAG, "initializeData: no camera groups in account");
+//                    Log.d(TAG, "initializeData: no camera groups in account");
                 }
 
             });
@@ -98,8 +96,7 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         networkCameras.observeForever((List<Camera> newCameras) -> {
 
             executor.diskIO().execute(() -> {
-//                Camera[] cameraArray = newCameras.toArray(new Camera[0]);
-//                appDatabase.cameraDao().saveCamera(cameraArray);
+
                 if (newCameras != null) {
                     for (int i = 0; i < newCameras.size(); i++) {
                         // saving cameras to database
@@ -107,14 +104,14 @@ public class Repository implements CameraRepository, CameraGroupRepository {
                         Log.d(TAG, "initializeData: saved camera " + newCameras.get(i).getName() + "\n jumbo id: " + newCameras.get(i).getJumboId());
                     }
                 } else {
-                    Log.d(TAG, "initializeData: no cameras in account");
+//                    Log.d(TAG, "initializeData: no cameras in account");
                 }
             });
         });
 
         // fetch data from web the first time
         if (isNetworkAvailable()){
-            Log.d(TAG, "initializeData: network connected");
+//            Log.d(TAG, "initializeData: network connected");
             fetchData(authToken);
         }
 
@@ -133,7 +130,7 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         }
 
         // retrieve from persisted data in db
-        Log.d(TAG, "loadCameras: loaded from db");
+//        Log.d(TAG, "loadCameras: loaded from db");
         return appDatabase.cameraDao().loadCameras();
     }
 
@@ -156,7 +153,7 @@ public class Repository implements CameraRepository, CameraGroupRepository {
     public LiveData<List<CameraGroup>> loadCameraGroups(String authToken) {
         // checking network status
         if (isNetworkAvailable()){
-            Log.d(TAG, "loadCameraGroups: network connected");
+//            Log.d(TAG, "loadCameraGroups: network connected");
             // if connected then fetch from web
             fetchData(authToken);
         }
@@ -191,15 +188,15 @@ public class Repository implements CameraRepository, CameraGroupRepository {
 //                Log.d(TAG, "onResponse: sent");
                 CameraGroup[] newGroups = response.body();
                 if (response != null && response.isSuccessful())
-//                    Log.d(TAG, "onResponse: success");
+                    Log.d(TAG, "onResponse: success");
                 for (int i = 0; i < newGroups.length; i++) {
-                    Log.d(TAG, "onResponse: entered loop");
+//                    Log.d(TAG, "onResponse: entered loop");
                     CameraGroup newGroup = new CameraGroup(newGroups[i].getId(),newGroups[i].getName(), newGroups[i].getTimezone());
                     groupList.add(newGroup);
                     String groupId = newGroup.getId();
                     Log.d(TAG, "onResponse: GROUP " + newGroups[i].getName());
                     for (int j = 0; j < newGroups[i].getCameras().length; j++) {
-//                        Log.d(TAG, "onResponse: entered second loop");
+                        Log.d(TAG, "onResponse: entered second loop");
                         Camera newCamera = newGroups[i].getCameras()[j];
                         newCamera.setGroupId(groupId);
                         cameraList.add(newCamera);
@@ -217,9 +214,6 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         });
 
     }
-    
-    
-
 
     /** checks network connection*/
     private boolean isNetworkAvailable() {

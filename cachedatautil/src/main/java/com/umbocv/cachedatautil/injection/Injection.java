@@ -11,7 +11,6 @@ import com.umbocv.cachedatautil.data.repository.Repository;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
 public class Injection {
     private static final String TAG = "Injection";
 
@@ -23,7 +22,7 @@ public class Injection {
     private static AppExecutor executor;
 
     public static Repository provideRepository(Context context) {
-        sRemoteWebService = provideRemoteDataSource();
+        sRemoteWebService = provideRemoteWebService();
         appDatabase = AppDatabase.getInstance(context.getApplicationContext());
         executor = AppExecutor.getInstance();
         Log.d(TAG, "provideRepository:  made repo");
@@ -31,10 +30,10 @@ public class Injection {
     }
 
 
-    public static RemoteWebService provideRemoteDataSource() {
+    public static RemoteWebService provideRemoteWebService() {
         if (sRemoteWebService == null){
             sRemoteWebService = getRetrofitInstance().create(RemoteWebService.class);
-            Log.d(TAG, "provideRemoteDataSource: made new data source");
+            Log.d(TAG, "provideRemoteWebService: made new data source");
         }
         return sRemoteWebService;
     }
