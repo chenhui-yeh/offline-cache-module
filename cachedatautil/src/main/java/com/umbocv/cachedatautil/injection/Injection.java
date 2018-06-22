@@ -25,7 +25,7 @@ public class Injection {
         sRemoteWebService = provideRemoteWebService();
         appDatabase = AppDatabase.getInstance(context.getApplicationContext());
         executor = AppExecutor.getInstance();
-        Log.d(TAG, "provideRepository:  made repo");
+//        Log.d(TAG, "provideRepository:  made repository");
         return Repository.getInstance(sRemoteWebService, appDatabase, executor, context.getApplicationContext());
     }
 
@@ -33,7 +33,7 @@ public class Injection {
     public static RemoteWebService provideRemoteWebService() {
         if (sRemoteWebService == null){
             sRemoteWebService = getRetrofitInstance().create(RemoteWebService.class);
-            Log.d(TAG, "provideRemoteWebService: made new data source");
+//            Log.d(TAG, "provideRemoteWebService: made new data source");
         }
         return sRemoteWebService;
     }

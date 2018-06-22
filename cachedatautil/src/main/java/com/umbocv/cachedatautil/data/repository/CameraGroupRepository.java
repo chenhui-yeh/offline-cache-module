@@ -6,6 +6,7 @@ import com.umbocv.cachedatautil.data.model.CameraGroup;
 
 import java.util.List;
 
+// for database operations for camera_group
 public interface CameraGroupRepository {
 
     LiveData<List<CameraGroup>> loadCameraGroups(String authToken);

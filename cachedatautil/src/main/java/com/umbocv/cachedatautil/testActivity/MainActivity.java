@@ -10,7 +10,7 @@ import com.umbocv.cachedatautil.injection.Injection;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    // UPDATE TOKEN
+    // UPDATE TOKEN //
     private final String TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1Mjk2MzUzNDcsImV4cCI6MTUyOTY1MzM0N30.HsbjxDByRJcpLydBjzhoUqWsJ_ZpwSTeKef2ak4MF_U";
     @Override
     protected void onCreate(Bundle savedInstanceState) {

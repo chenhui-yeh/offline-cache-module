@@ -9,6 +9,7 @@ import android.util.Log;
 import com.umbocv.cachedatautil.data.model.Camera;
 import com.umbocv.cachedatautil.data.model.CameraGroup;
 
+// new daos can be added here
 @Database(entities = {Camera.class, CameraGroup.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -28,7 +29,7 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (LOCK) {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                         AppDatabase.class, AppDatabase.DATABASE_NAME)
-//                        .addMigrations()
+//                        .addMigrations(MIGRATION_1_2)
                         .build();
 //                Log.d(LOG_TAG, "Made new database");
             }
@@ -37,7 +38,8 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     // sample migration
-//    static final Migration FROM_1_TO_2 = new Migration(1, 2) {
+    // @VisibleForTesting
+//    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
 //        @Override
 //        public void migrate(final SupportSQLiteDatabase database) {
 //            database.execSQL("ALTER TABLE cameras
