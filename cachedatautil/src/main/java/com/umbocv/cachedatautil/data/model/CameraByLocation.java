@@ -7,19 +7,18 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import static com.umbocv.cachedatautil.data.model.CameraGroup.TABLE_NAME;
+import static com.umbocv.cachedatautil.data.model.CameraByLocation.TABLE_NAME;
 
-/** CameraGroup class for database and network*/
+/** CameraByLocationDao class for database and network*/
 @Entity(tableName = TABLE_NAME)
-public class CameraGroup {
-    public static final String TABLE_NAME = "camera_groups";
+public class CameraByLocation {
+    public static final String TABLE_NAME = "camera_by_location";
 
     @PrimaryKey
     @NonNull
     @SerializedName("_id")
     @Expose
     private String id;
-
 
     @SerializedName("name")
     @Expose
@@ -79,7 +78,7 @@ public class CameraGroup {
         this.timezone = timezone;
     }
 
-    public CameraGroup(@NonNull String id, String name, String timezone) {
+    public CameraByLocation(@NonNull String id, String name, String timezone) {
         this.id = id;
         this.name = name;
         this.timezone = timezone;

@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.umbocv.cachedatautil.data.model.CameraGroup;
+import com.umbocv.cachedatautil.data.model.CameraByLocation;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class CameraGroupDaoTest {
-    CameraGroupDao cameraGroupDao;
+public class CameraByLocationDaoTest {
+    CameraByLocationDao mCameraByLocationDao;
     AppDatabase appDatabase;
 
     @Before
@@ -29,43 +29,43 @@ public class CameraGroupDaoTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getTargetContext(), AppDatabase.class)
                 .allowMainThreadQueries()
                 .build();
-        cameraGroupDao = appDatabase.cameraGroupDao();
+        mCameraByLocationDao = appDatabase.cameraByLocationDao();
     }
 
     @Test
     public void loadCameraGroups_shouldGetEmptyList () throws InterruptedException {
-        assertEquals(0, getValue(cameraGroupDao.loadCameraGroups()).size());
+        assertEquals(0, getValue(mCameraByLocationDao.loadCameraByLocation()).size());
     }
 
     @Test
     public void loadCameraGroups_successfullyRetrieveList() throws InterruptedException {
-        CameraGroup newCameraGroup = generalTestCameraGroup("camera id 1", "name 1", "timezone 1");
-        cameraGroupDao.saveCameraGroup(newCameraGroup);
+        CameraByLocation newCameraByLocation = generalTestCameraGroup("camera id 1", "name 1", "timezone 1");
+        mCameraByLocationDao.saveCameraByLocation(newCameraByLocation);
 
-        assertEquals(newCameraGroup.getId(), getValue(cameraGroupDao.loadCameraGroups()).get(0).getId());
+        assertEquals(newCameraByLocation.getId(), getValue(mCameraByLocationDao.loadCameraByLocation()).get(0).getId());
     }
 
     @Test
     public void saveCameraGroups_successfullyInserted() throws InterruptedException {
-        CameraGroup newCameraGroup = generalTestCameraGroup("camera id 1", "name 1", "timezone 1");
-        cameraGroupDao.saveCameraGroup(newCameraGroup);
+        CameraByLocation newCameraByLocation = generalTestCameraGroup("camera id 1", "name 1", "timezone 1");
+        mCameraByLocationDao.saveCameraByLocation(newCameraByLocation);
 
-        assertEquals(newCameraGroup.getId(), getValue(cameraGroupDao.loadCameraGroups()).get(0).getId());
+        assertEquals(newCameraByLocation.getId(), getValue(mCameraByLocationDao.loadCameraByLocation()).get(0).getId());
     }
 
     @Test
     public void deleteCameraGroups_successfullyDeleted() throws InterruptedException {
-        CameraGroup newGroup = generalTestCameraGroup("id 1", "name 1", "timezone 1");
-        cameraGroupDao.saveCameraGroup(newGroup);
-        assertEquals(newGroup.getId(), getValue(cameraGroupDao.loadCameraGroups()).get(0).getId());
-        cameraGroupDao.deleteCameraGroup(getValue(cameraGroupDao.loadCameraGroups()).get(0));
+        CameraByLocation newGroup = generalTestCameraGroup("id 1", "name 1", "timezone 1");
+        mCameraByLocationDao.saveCameraByLocation(newGroup);
+        assertEquals(newGroup.getId(), getValue(mCameraByLocationDao.loadCameraByLocation()).get(0).getId());
+        mCameraByLocationDao.deleteCameraGroup(getValue(mCameraByLocationDao.loadCameraByLocation()).get(0));
 
-        List<CameraGroup> groupsAfterDeletion = getValue(cameraGroupDao.loadCameraGroups());
+        List<CameraByLocation> groupsAfterDeletion = getValue(mCameraByLocationDao.loadCameraByLocation());
         assertEquals(0, groupsAfterDeletion.size());
     }
 
-    CameraGroup generalTestCameraGroup (String id, String name, String timezone) {
-        return new CameraGroup(id, name, timezone);
+    CameraByLocation generalTestCameraGroup (String id, String name, String timezone) {
+        return new CameraByLocation(id, name, timezone);
     }
     /**
      * This is used to make sure the method waits till data is available from the observer.

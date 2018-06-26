@@ -10,7 +10,7 @@ import android.util.Log;
 import com.umbocv.cachedatautil.AppExecutor;
 import com.umbocv.cachedatautil.data.local.AppDatabase;
 import com.umbocv.cachedatautil.data.model.Camera;
-import com.umbocv.cachedatautil.data.model.CameraGroup;
+import com.umbocv.cachedatautil.data.model.CameraByLocation;
 import com.umbocv.cachedatautil.data.remote.RemoteWebService;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import retrofit2.Response;
 
 // retrieves data from network if available
 // otherwise load from local db
-public class Repository implements CameraRepository, CameraGroupRepository {
+public class Repository implements CameraByLocationRepository {
 
     private static final String TAG = "Repository";
 
@@ -34,8 +34,8 @@ public class Repository implements CameraRepository, CameraGroupRepository {
     private final AppExecutor executor; // provide background thread for database operations
     private final Context context; // needed to check network status
 
-    private boolean initialized = false;
-    private MutableLiveData<List<CameraGroup>> downloadedCameraGroups; // to be observed
+    private static boolean initialized = false;
+    private MutableLiveData<List<CameraByLocation>> downloadedCameraByLocation; // to be observed
     private MutableLiveData<List<Camera>> downloadedCameras; // to be observed
     
     
@@ -43,11 +43,9 @@ public class Repository implements CameraRepository, CameraGroupRepository {
                                          AppDatabase appDatabase,
                                          AppExecutor executor,
                                          Context context) {
-//        Log.d(TAG, "getInstance: Getting repository");
         if (sInstance == null) {
             synchronized (LOCK) {
                 sInstance = new Repository(remoteWebService, appDatabase, executor, context);
-//                Log.d(TAG, "getInstance: made new repository");
             }
         }
         return sInstance;
@@ -61,7 +59,7 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         this.executor = executor;
         this.context = context;
 
-        downloadedCameraGroups = new MutableLiveData<>();
+        downloadedCameraByLocation = new MutableLiveData<>();
         downloadedCameras = new MutableLiveData<>();
     }
 
@@ -70,31 +68,24 @@ public class Repository implements CameraRepository, CameraGroupRepository {
     // to initialize content in database
     public synchronized void initializeData(String authToken) {
         if (initialized) {
-//            Log.d(TAG, "initializeData: true");
             return;
         }
         initialized = true;
 
-//        Log.d(TAG, "initializeData: initializing data");
-
-        LiveData<List<CameraGroup>> networkCameraGroups = downloadedCameraGroups;
+        LiveData<List<CameraByLocation>> networkCameraByLocation = downloadedCameraByLocation;
         LiveData<List<Camera>> networkCameras = downloadedCameras;
 
         // observing data:
-        // networkCameraGroups and networkCameras will be updated by postValue() each time fetchData() method is called
+        // networkCameraByLocation and networkCameras will be updated by postValue() each time fetchData() method is called
         // will be observed until app is uninstalled
-        networkCameraGroups.observeForever((List<CameraGroup> newCameraGroups) -> {
+        networkCameraByLocation.observeForever((List<CameraByLocation> newCameraByLocations) -> {
             executor.diskIO().execute(()->{
-                if (newCameraGroups != null) {
-                    for (int i = 0; i < newCameraGroups.size(); i++) {
+                if (newCameraByLocations != null) {
+                    for (int i = 0; i < newCameraByLocations.size(); i++) {
                         // saving camera groups to database
-                        appDatabase.cameraGroupDao().saveCameraGroup(newCameraGroups.get(i));
-//                        Log.d(TAG, "initializeData: saved camera group " + newCameraGroups.get(i).getName());
+                        appDatabase.cameraByLocationDao().saveCameraByLocation(newCameraByLocations.get(i));
                     }
                 }
-//                else {
-//                    Log.d(TAG, "initializeData: no camera groups in account");
-//                }
             });
         });
 
@@ -104,18 +95,13 @@ public class Repository implements CameraRepository, CameraGroupRepository {
                     for (int i = 0; i < newCameras.size(); i++) {
                         // saving cameras to database
                         appDatabase.cameraDao().saveCamera(newCameras.get(i));
-//                        Log.d(TAG, "initializeData: saved camera " + newCameras.get(i).getName() + "\n jumbo id: " + newCameras.get(i).getJumboId());
                     }
                 }
-//                else {
-//                    Log.d(TAG, "initializeData: no cameras in account");
-//                }
             });
         });
 
         // fetch data from web the first time
         if (isNetworkAvailable()){
-//            Log.d(TAG, "initializeData: network connected");
             fetchData(authToken);
         }
 
@@ -128,13 +114,11 @@ public class Repository implements CameraRepository, CameraGroupRepository {
     public LiveData<List<Camera>> loadCameras(String authToken) {
         // checking network status
         if (isNetworkAvailable()) {
-//            Log.d(TAG, "loadCameras: network connected");
             // if connected then fetch from web
             fetchData(authToken);
         }
 
         // retrieve from persisted data in db regardless of network status
-//        Log.d(TAG, "loadCameras: loaded from db");
         return appDatabase.cameraDao().loadCameras();
     }
 
@@ -152,32 +136,31 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         });
     }
 
-    // camera_groups
+    // camera_by_location
     @Override
-    public LiveData<List<CameraGroup>> loadCameraGroups(String authToken) {
+    public LiveData<List<CameraByLocation>> loadCameraByLocation(String authToken) {
         // checking network status
         if (isNetworkAvailable()){
-//            Log.d(TAG, "loadCameraGroups: network connected");
             // if connected then fetch from web
             fetchData(authToken);
         }
 
         // retrieve from persisted data in db regardless of network status
-        return appDatabase.cameraGroupDao().loadCameraGroups();
+        return appDatabase.cameraByLocationDao().loadCameraByLocation();
     }
 
     @Override
-    public void deleteCameraGroup(CameraGroup cameraGroup) {
+    public void deleteCameraByLocation(CameraByLocation cameraByLocation) {
         executor.diskIO().execute(() -> {
-            appDatabase.cameraGroupDao().deleteCameraGroup(cameraGroup);
+            appDatabase.cameraByLocationDao().deleteCameraByLocation(cameraByLocation);
         });
 
     }
 
     @Override
-    public void saveCameraGroup(CameraGroup cameraGroup) {
+    public void saveCameraByLocation(CameraByLocation cameraByLocation) {
         executor.diskIO().execute(()->{
-            appDatabase.cameraGroupDao().saveCameraGroup(cameraGroup);
+            appDatabase.cameraByLocationDao().saveCameraByLocation(cameraByLocation);
         });
     }
 
@@ -186,40 +169,33 @@ public class Repository implements CameraRepository, CameraGroupRepository {
     // fetch data through network
     // needs to check network connection first before calling this method
     public void fetchData(String authToken) {
-        Call<CameraGroup[]> call = mRemoteWebService.getCameraResponse(authToken);
-        List<CameraGroup> groupList = new ArrayList<CameraGroup>();
+        Call<CameraByLocation[]> call = mRemoteWebService.getCameraResponse(authToken);
+        List<CameraByLocation> groupList = new ArrayList<CameraByLocation>();
         List<Camera> cameraList = new ArrayList<>();
-        call.enqueue(new Callback<CameraGroup[]>() {
+        call.enqueue(new Callback<CameraByLocation[]>() {
             @Override
-            public void onResponse(Call<CameraGroup[]> call, Response<CameraGroup[]> response) {
-//                Log.d(TAG, "onResponse: sent");
-                CameraGroup[] newGroups = response.body();
+            public void onResponse(Call<CameraByLocation[]> call, Response<CameraByLocation[]> response) {
+                CameraByLocation[] newGroups = response.body();
                 if (response != null && response.isSuccessful())
-//                    Log.d(TAG, "onResponse: success");
                 for (int i = 0; i < newGroups.length; i++) {
-//                    Log.d(TAG, "onResponse: entered loop");
-                    CameraGroup newGroup = new CameraGroup(newGroups[i].getId(),newGroups[i].getName(), newGroups[i].getTimezone());
+                    CameraByLocation newGroup = new CameraByLocation(newGroups[i].getId(),newGroups[i].getName(), newGroups[i].getTimezone());
                     groupList.add(newGroup);
                     String groupId = newGroup.getId();
-//                    Log.d(TAG, "onResponse: GROUP " + newGroups[i].getName());
                     for (int j = 0; j < newGroups[i].getCameras().length; j++) {
-//                        Log.d(TAG, "onResponse: entered second loop");
                         Camera newCamera = newGroups[i].getCameras()[j];
                         newCamera.setGroupId(groupId);
                         cameraList.add(newCamera);
-//                        Log.d(TAG, "onResponse: name: " + newCamera.getName() + "\n group: " + newCamera.getGroupId());
                     }
                 }
-                downloadedCameraGroups.postValue(groupList); // updating data from network
+                downloadedCameraByLocation.postValue(groupList); // updating data from network
                 downloadedCameras.postValue(cameraList);
             }
 
             @Override
-            public void onFailure(Call<CameraGroup[]> call, Throwable t) {
+            public void onFailure(Call<CameraByLocation[]> call, Throwable t) {
                 Log.e(TAG, "onFailure: failed to perform network call");
             }
         });
-
     }
 
     // checks network connection
@@ -229,4 +205,5 @@ public class Repository implements CameraRepository, CameraGroupRepository {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isAvailable() && activeNetworkInfo.isConnected();
     }
+
 }

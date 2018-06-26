@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "579b1d5589daf2ed25c1e256ae69efd7",
+    "identityHash": "da9f88a035c221930fc309328d93946a",
     "entities": [
       {
         "tableName": "cameras",
@@ -49,7 +49,7 @@
         "foreignKeys": []
       },
       {
-        "tableName": "camera_groups",
+        "tableName": "camera_by_location",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `timezone` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
@@ -83,7 +83,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"579b1d5589daf2ed25c1e256ae69efd7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"da9f88a035c221930fc309328d93946a\")"
     ]
   }
 }

@@ -8,9 +8,8 @@ import android.support.test.InstrumentationRegistry;
 
 import com.umbocv.cachedatautil.AppExecutor;
 import com.umbocv.cachedatautil.data.local.AppDatabase;
-import com.umbocv.cachedatautil.data.model.CameraGroup;
+import com.umbocv.cachedatautil.data.model.CameraByLocation;
 import com.umbocv.cachedatautil.data.remote.RemoteWebService;
-import com.umbocv.cachedatautil.injection.Injection;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +45,7 @@ public class RepositoryTest {
                 .build();
 
         appExecutor = AppExecutor.getInstance();
-        remoteDataSource = Injection.provideRemoteWebService();
+        // remoteDataSource = Injection.provideRemoteWebService();
         mRepository = Repository.getInstance(remoteDataSource, appDatabase, appExecutor, InstrumentationRegistry.getTargetContext());
     }
 
@@ -58,15 +57,15 @@ public class RepositoryTest {
      //           .thenReturn(remoteDataSource.getCameraResponse(authToken));
     }
 
-    private List<CameraGroup> cameraGroupList () {
-        List<CameraGroup> cameraGroups = new ArrayList<>();
-        CameraGroup one = new CameraGroup("id 1", "name 1", "timezone 1");
-        CameraGroup two = new CameraGroup("id 2", "name 2", "timezone 2");
+    private List<CameraByLocation> cameraGroupList () {
+        List<CameraByLocation> cameraByLocations = new ArrayList<>();
+        CameraByLocation one = new CameraByLocation("id 1", "name 1", "timezone 1");
+        CameraByLocation two = new CameraByLocation("id 2", "name 2", "timezone 2");
 
-        cameraGroups.add(one);
-        cameraGroups.add(two);
+        cameraByLocations.add(one);
+        cameraByLocations.add(two);
 
-        return cameraGroups;
+        return cameraByLocations;
     }
 
 //    private List<Camera> cameraList() {

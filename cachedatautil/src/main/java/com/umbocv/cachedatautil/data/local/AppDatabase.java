@@ -4,19 +4,18 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
-import android.util.Log;
 
 import com.umbocv.cachedatautil.data.model.Camera;
-import com.umbocv.cachedatautil.data.model.CameraGroup;
+import com.umbocv.cachedatautil.data.model.CameraByLocation;
 
 // new daos can be added here
-@Database(entities = {Camera.class, CameraGroup.class}, version = 1)
+@Database(entities = {Camera.class, CameraByLocation.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
+    // DAOs
     public abstract CameraDao cameraDao();
-    public abstract CameraGroupDao cameraGroupDao();
+    public abstract CameraByLocationDao cameraByLocationDao ();
 
-    private static final String LOG_TAG = AppDatabase.class.getSimpleName();
     private static final String DATABASE_NAME = "umbo_cameras";
 
     // For Singleton instantiation
@@ -24,20 +23,18 @@ public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase sInstance;
 
     public static AppDatabase getInstance(Context context) {
-//        Log.d(LOG_TAG, "Getting the database");
         if (sInstance == null) {
             synchronized (LOCK) {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                         AppDatabase.class, AppDatabase.DATABASE_NAME)
-//                        .addMigrations(MIGRATION_1_2)
+//                        .addMigrations(MIGRATION_1_2) // ADD FUTURE MIGRATIONS HERE
                         .build();
-//                Log.d(LOG_TAG, "Made new database");
             }
         }
         return sInstance;
     }
 
-    // sample migration
+    /** sample migration*/
     // @VisibleForTesting
 //    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
 //        @Override
