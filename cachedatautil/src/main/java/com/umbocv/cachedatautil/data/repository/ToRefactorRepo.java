@@ -22,12 +22,12 @@ import retrofit2.Response;
 
 // retrieves data from network if available
 // otherwise load from local db
-public class Repository implements CameraByLocationRepository {
+public class ToRefactorRepo implements CameraByLocationRepository {
 
-    private static final String TAG = "Repository";
+    private static final String TAG = "ToRefactorRepo";
 
     private static final Object LOCK = new Object();
-    private static Repository sInstance;
+    private static ToRefactorRepo sInstance;
     
     private final RemoteWebService mRemoteWebService;
     private final AppDatabase appDatabase;
@@ -39,21 +39,21 @@ public class Repository implements CameraByLocationRepository {
     private MutableLiveData<List<Camera>> downloadedCameras; // to be observed
     
     
-    public static Repository getInstance(RemoteWebService remoteWebService,
-                                         AppDatabase appDatabase,
-                                         AppExecutor executor,
-                                         Context context) {
+    public static ToRefactorRepo getInstance(RemoteWebService remoteWebService,
+                                             AppDatabase appDatabase,
+                                             AppExecutor executor,
+                                             Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
-                sInstance = new Repository(remoteWebService, appDatabase, executor, context);
+                sInstance = new ToRefactorRepo(remoteWebService, appDatabase, executor, context);
             }
         }
         return sInstance;
     }
-    private Repository (RemoteWebService remoteWebService,
-                        AppDatabase appDatabase,
-                        AppExecutor executor,
-                        Context context) {
+    private ToRefactorRepo(RemoteWebService remoteWebService,
+                           AppDatabase appDatabase,
+                           AppExecutor executor,
+                           Context context) {
         this.mRemoteWebService = remoteWebService;
         this.appDatabase = appDatabase;
         this.executor = executor;

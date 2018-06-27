@@ -11,7 +11,7 @@ import static com.umbocv.cachedatautil.data.model.Camera.TABLE_NAME;
 
 /** Camera class for networking and database*/
 @Entity(tableName = TABLE_NAME )
-public class Camera {
+public class Camera extends UmboObject{
     public static final String TABLE_NAME = "cameras";
 
     @SerializedName("_id")

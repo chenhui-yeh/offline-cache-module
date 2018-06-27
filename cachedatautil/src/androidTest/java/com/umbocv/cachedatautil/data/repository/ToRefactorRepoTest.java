@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 //import static org.mockito.Matchers.anyString;
 //import static org.mockito.Mockito.when;
 
-public class RepositoryTest {
+public class ToRefactorRepoTest {
 
     AppDatabase appDatabase;
 
@@ -33,7 +33,7 @@ public class RepositoryTest {
     RemoteWebService remoteDataSource;
     AppExecutor appExecutor;
 
-    private Repository mRepository;
+    private ToRefactorRepo mToRefactorRepo;
 
 
     @Before
@@ -46,7 +46,7 @@ public class RepositoryTest {
 
         appExecutor = AppExecutor.getInstance();
         // remoteDataSource = Injection.provideRemoteWebService();
-        mRepository = Repository.getInstance(remoteDataSource, appDatabase, appExecutor, InstrumentationRegistry.getTargetContext());
+        mToRefactorRepo = ToRefactorRepo.getInstance(remoteDataSource, appDatabase, appExecutor, InstrumentationRegistry.getTargetContext());
     }
 
     @Test

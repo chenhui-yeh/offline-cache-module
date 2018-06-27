@@ -1,24 +1,32 @@
 package com.umbocv.cachedatautil.data.repository;
 
-import android.arch.lifecycle.LiveData;
-
-import com.umbocv.cachedatautil.data.model.Camera;
-import com.umbocv.cachedatautil.data.model.CameraByLocation;
+import com.umbocv.cachedatautil.data.local.UmboDao;
+import com.umbocv.cachedatautil.data.model.UmboObject;
 
 import java.util.List;
 
 // for database operations for camera_group
-public interface CameraByLocationRepository {
+public class CameraByLocationRepository implements UmboRepository{
 
-    LiveData<List<CameraByLocation>> loadCameraByLocation(String authToken);
+    private UmboDao cameraByLocationDao;
 
-    void deleteCameras (CameraByLocation cameraByLocation);
+    @Override
+    public List<UmboObject> loadData(String authToken) {
+        return null;
+    }
 
-    void saveCameras(CameraByLocation cameraByLocation);
+    @Override
+    public UmboObject loadSingleData(String authToken) {
+        return null;
+    }
 
-    LiveData<List<Camera>> loadCameras(String authToken);
+    @Override
+    public void saveData(UmboObject... objects) {
 
-    void saveCamera(Camera camera);
+    }
 
-    void deleteCamera(Camera camera);
+    @Override
+    public void deleteData(UmboObject object) {
+
+    }
 }

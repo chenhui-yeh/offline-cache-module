@@ -8,7 +8,7 @@ import com.umbocv.cachedatautil.AppExecutor;
 import com.umbocv.cachedatautil.Constants;
 import com.umbocv.cachedatautil.data.local.AppDatabase;
 import com.umbocv.cachedatautil.data.remote.RemoteWebService;
-import com.umbocv.cachedatautil.data.repository.Repository;
+import com.umbocv.cachedatautil.data.repository.ToRefactorRepo;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -30,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
         remoteWebService = getRetrofitInstance().create(RemoteWebService.class);
         appDatabase = AppDatabase.getInstance(this);
         executor = AppExecutor.getInstance();
-        Repository repository = Repository.getInstance(remoteWebService, appDatabase, executor, this.getApplicationContext());
-        repository.initializeData(TOKEN);
-        repository.loadCameras(TOKEN);
+        ToRefactorRepo toRefactorRepo = ToRefactorRepo.getInstance(remoteWebService, appDatabase, executor, this.getApplicationContext());
+        toRefactorRepo.initializeData(TOKEN);
+        toRefactorRepo.loadCameras(TOKEN);
     }
 
     public static Retrofit getRetrofitInstance() {

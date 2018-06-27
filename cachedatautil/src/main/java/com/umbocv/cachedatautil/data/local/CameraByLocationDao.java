@@ -12,7 +12,7 @@ import com.umbocv.cachedatautil.data.model.CameraByLocation;
 import java.util.List;
 
 @Dao
-public interface CameraByLocationDao {
+public interface CameraByLocationDao extends UmboDao {
 
     @Query("SELECT * FROM camera_by_location")
     LiveData<List<CameraByLocation>> loadCameraByLocation ();
