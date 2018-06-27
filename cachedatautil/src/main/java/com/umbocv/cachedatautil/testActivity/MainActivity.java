@@ -7,8 +7,12 @@ import com.chenhuiyeh.unittestingumbo.R;
 import com.umbocv.cachedatautil.AppExecutor;
 import com.umbocv.cachedatautil.Constants;
 import com.umbocv.cachedatautil.data.local.AppDatabase;
+import com.umbocv.cachedatautil.data.local.CameraByLocationDao;
 import com.umbocv.cachedatautil.data.remote.RemoteWebService;
-import com.umbocv.cachedatautil.data.repository.ToRefactorRepo;
+import com.umbocv.cachedatautil.data.repository.CameraByLocationRepository;
+//import com.umbocv.cachedatautil.data.repository.ToRefactorRepo;
+import com.umbocv.cachedatautil.data.repository.CameraRepository;
+import com.umbocv.cachedatautil.data.repository.UmboRepository;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -20,9 +24,11 @@ public class MainActivity extends AppCompatActivity {
     private static RemoteWebService remoteWebService;
     private static AppDatabase appDatabase;
     private static AppExecutor executor;
+    private static UmboRepository cameraByLocationRepo;
+    private static UmboRepository cameraRepo;
 
     // UPDATE TOKEN //
-    private final String TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1Mjk2MzUzNDcsImV4cCI6MTUyOTY1MzM0N30.HsbjxDByRJcpLydBjzhoUqWsJ_ZpwSTeKef2ak4MF_U";
+    private final String TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1MzAwODY2MjIsImV4cCI6MTUzMDEwNDYyMn0.LK3SfKYKea3Gg4syTaaCOrwf7t6fozKRJEmiC6FX8U0";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,9 +36,11 @@ public class MainActivity extends AppCompatActivity {
         remoteWebService = getRetrofitInstance().create(RemoteWebService.class);
         appDatabase = AppDatabase.getInstance(this);
         executor = AppExecutor.getInstance();
-        ToRefactorRepo toRefactorRepo = ToRefactorRepo.getInstance(remoteWebService, appDatabase, executor, this.getApplicationContext());
-        toRefactorRepo.initializeData(TOKEN);
-        toRefactorRepo.loadCameras(TOKEN);
+        cameraByLocationRepo = CameraByLocationRepository.getInstance(appDatabase.cameraByLocationDao(), remoteWebService, executor, this);
+        cameraByLocationRepo.initializeData(TOKEN);
+
+        cameraRepo = CameraRepository.getInstance(appDatabase.cameraDao(), remoteWebService, executor, this);
+        cameraRepo.initializeData(TOKEN);
     }
 
     public static Retrofit getRetrofitInstance() {

@@ -34,33 +34,33 @@ public class CameraByLocationDaoTest {
 
     @Test
     public void loadCameraGroups_shouldGetEmptyList () throws InterruptedException {
-        assertEquals(0, getValue(mCameraByLocationDao.loadCameraByLocation()).size());
+        assertEquals(0, getValue(mCameraByLocationDao.loadData()).size());
     }
 
     @Test
     public void loadCameraGroups_successfullyRetrieveList() throws InterruptedException {
         CameraByLocation newCameraByLocation = generalTestCameraGroup("camera id 1", "name 1", "timezone 1");
-        mCameraByLocationDao.saveCameraByLocation(newCameraByLocation);
+        mCameraByLocationDao.saveData(newCameraByLocation);
 
-        assertEquals(newCameraByLocation.getId(), getValue(mCameraByLocationDao.loadCameraByLocation()).get(0).getId());
+        assertEquals(newCameraByLocation.getId(), getValue(mCameraByLocationDao.loadData()).get(0).getId());
     }
 
     @Test
     public void saveCameraGroups_successfullyInserted() throws InterruptedException {
         CameraByLocation newCameraByLocation = generalTestCameraGroup("camera id 1", "name 1", "timezone 1");
-        mCameraByLocationDao.saveCameraByLocation(newCameraByLocation);
+        mCameraByLocationDao.saveData(newCameraByLocation);
 
-        assertEquals(newCameraByLocation.getId(), getValue(mCameraByLocationDao.loadCameraByLocation()).get(0).getId());
+        assertEquals(newCameraByLocation.getId(), getValue(mCameraByLocationDao.loadData()).get(0).getId());
     }
 
     @Test
     public void deleteCameraGroups_successfullyDeleted() throws InterruptedException {
         CameraByLocation newGroup = generalTestCameraGroup("id 1", "name 1", "timezone 1");
-        mCameraByLocationDao.saveCameraByLocation(newGroup);
-        assertEquals(newGroup.getId(), getValue(mCameraByLocationDao.loadCameraByLocation()).get(0).getId());
-        mCameraByLocationDao.deleteCameraGroup(getValue(mCameraByLocationDao.loadCameraByLocation()).get(0));
+        mCameraByLocationDao.saveData(newGroup);
+        assertEquals(newGroup.getId(), getValue(mCameraByLocationDao.loadData()).get(0).getId());
+        mCameraByLocationDao.deleteData(getValue(mCameraByLocationDao.loadData()).get(0));
 
-        List<CameraByLocation> groupsAfterDeletion = getValue(mCameraByLocationDao.loadCameraByLocation());
+        List<CameraByLocation> groupsAfterDeletion = getValue(mCameraByLocationDao.loadData());
         assertEquals(0, groupsAfterDeletion.size());
     }
 

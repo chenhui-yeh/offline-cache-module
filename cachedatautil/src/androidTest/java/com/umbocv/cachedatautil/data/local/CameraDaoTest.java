@@ -34,15 +34,15 @@ public class CameraDaoTest {
 
     @Test
     public void loadCameras_shouldGetEmptyList_ifNothingInserted() throws InterruptedException {
-        assertEquals(0, getValue(cameraDao.loadCameras()).size());
+        assertEquals(0, getValue(cameraDao.loadData()).size());
     }
 
     @Test
     public void loadCameras_loadCameras_success() throws InterruptedException {
         Camera newCamera = generalTestCamera("camera id 1", "name 1", "jumbo id 1", "serial 1", "group id");
 
-        cameraDao.saveCamera(newCamera);
-        List<Camera> cameraRetrieved = getValue(cameraDao.loadCameras());
+        cameraDao.saveData(newCamera);
+        List<Camera> cameraRetrieved = getValue(cameraDao.loadData());
         assertEquals(1, cameraRetrieved.size());
 
     }
@@ -51,9 +51,9 @@ public class CameraDaoTest {
     public void addCamera_SuccessfullyAddCamera() throws InterruptedException {
         Camera newCamera = generalTestCamera("camera id 1", "name 1", "jumbo id 1", "serial 1", "group id");
 
-        cameraDao.saveCamera(newCamera);
+        cameraDao.saveData(newCamera);
 
-        List<Camera> cameraRetrieved = getValue(cameraDao.loadCameras());
+        List<Camera> cameraRetrieved = getValue(cameraDao.loadData());
         assertEquals("camera id 1", cameraRetrieved.get(0).getId());
         assertEquals("name 1", cameraRetrieved.get(0).getName());
 
@@ -62,13 +62,13 @@ public class CameraDaoTest {
     @Test
     public void deleteCamera_SuccessfullyDeleteCamera() throws InterruptedException {
         Camera newCamera = generalTestCamera("camera id 1", "name 1", "jumbo id 1", "serial 1", "group id");
-        cameraDao.saveCamera(newCamera);
+        cameraDao.saveData(newCamera);
 
-        List<Camera> cameraRetrieved = getValue(cameraDao.loadCameras());
+        List<Camera> cameraRetrieved = getValue(cameraDao.loadData());
         assertEquals(newCamera.getId(), cameraRetrieved.get(0).getId());
         assertEquals(newCamera.getName(), cameraRetrieved.get(0).getName());
-        cameraDao.deleteCamera(cameraRetrieved.get(0));
-        List<Camera> cameraRetreivedAfterUpdate = getValue(cameraDao.loadCameras());
+        cameraDao.deleteData(cameraRetrieved.get(0));
+        List<Camera> cameraRetreivedAfterUpdate = getValue(cameraDao.loadData());
         assertEquals(0,cameraRetreivedAfterUpdate.size());
 
     }

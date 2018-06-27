@@ -12,19 +12,24 @@ import com.umbocv.cachedatautil.data.model.Camera;
 import java.util.List;
 
 @Dao
-public interface CameraDao extends UmboDao{
-//    @Query("SELECT * from cameras")
-//    LiveData<List<Camera>> loadCameras();
-//
-//    @Query("SELECT * from cameras WHERE groupId = :groupId")
-//    LiveData<List<Camera>> loadCamerasByGroup (String groupId);
-//
-//    @Query("SELECT * FROM cameras WHERE id = :id")
-//    LiveData<Camera> loadCameraById(String id);
-//
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    void saveCamera(Camera...  camera);
-//
-//    @Delete
-//    void deleteCamera(Camera camera);
+public interface CameraDao extends UmboDao<Camera> {
+
+    @Override
+    @Query("SELECT * FROM cameras WHERE id = :id")
+    LiveData<Camera> loadDataById(String id);
+
+    @Override
+    @Query("SELECT * FROM cameras")
+    LiveData<List<Camera>> loadData();
+
+    @Override
+    @Insert(onConflict =  OnConflictStrategy.REPLACE)
+    void saveData(Camera... camera);
+
+    @Override
+    @Delete
+    void deleteData(Camera camera);
+
+    @Query("SELECT * from cameras WHERE locationId = :groupId")
+    LiveData<List<Camera>> loadCamerasByGroup (String groupId);
 }

@@ -8,21 +8,26 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.umbocv.cachedatautil.data.model.CameraByLocation;
+import com.umbocv.cachedatautil.data.model.UmboObject;
 
 import java.util.List;
 
 @Dao
-public interface CameraByLocationDao extends UmboDao {
+public interface CameraByLocationDao extends UmboDao<CameraByLocation> {
 
+    @Override
     @Query("SELECT * FROM camera_by_location")
-    LiveData<List<CameraByLocation>> loadCameraByLocation ();
+    LiveData<List<CameraByLocation>> loadData();
 
+    @Override
     @Query("SELECT * FROM camera_by_location WHERE id = :id")
-    LiveData<CameraByLocation> loadCameraByLocationById (String id);
+    LiveData<CameraByLocation> loadDataById(String id);
 
+    @Override
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void saveCameraByLocation (CameraByLocation... cameraByLocation);
+    void saveData(CameraByLocation... cameraByLocation);
 
+    @Override
     @Delete
-    void deleteCameraByLocation (CameraByLocation cameraByLocation);
+    void deleteData(CameraByLocation cameraByLocation);
 }

@@ -9,9 +9,10 @@ import com.google.gson.annotations.SerializedName;
 
 import static com.umbocv.cachedatautil.data.model.Camera.TABLE_NAME;
 
+
 /** Camera class for networking and database*/
-@Entity(tableName = TABLE_NAME )
-public class Camera extends UmboObject{
+@Entity(tableName = TABLE_NAME)
+public class Camera extends UmboObject<Camera>{
     public static final String TABLE_NAME = "cameras";
 
     @SerializedName("_id")
@@ -32,14 +33,14 @@ public class Camera extends UmboObject{
     @Expose
     private String serial;
 
-    private String groupId;
+    private String locationId;
 
-    public Camera(@NonNull String id, String name, String jumboId, String serial, String groupId) {
+    public Camera (@NonNull String id, String name, String jumboId, String serial, String locationId) {
         this.id = id;
         this.name = name;
         this.jumboId = jumboId;
         this.serial = serial;
-        this.groupId = groupId;
+        this.locationId = locationId;
     }
 
     @NonNull
@@ -75,12 +76,12 @@ public class Camera extends UmboObject{
         this.serial = serial;
     }
 
-    public String getGroupId() {
-        return groupId;
+    public String getLocationId() {
+        return locationId;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
     }
 }
 

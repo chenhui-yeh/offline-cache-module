@@ -16,7 +16,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract CameraDao cameraDao();
     public abstract CameraByLocationDao cameraByLocationDao ();
 
-    private static final String DATABASE_NAME = "umbo_cameras";
+    private static final String DATABASE_NAME = "umbocv_cameras";
 
     // For Singleton instantiation
     private static final Object LOCK = new Object();

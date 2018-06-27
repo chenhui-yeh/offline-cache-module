@@ -1,4 +1,4 @@
 package com.umbocv.cachedatautil.data.model;
 
-public class UmboObject extends Object{
+public abstract class UmboObject<T extends UmboObject<T>> extends Object{
 }
