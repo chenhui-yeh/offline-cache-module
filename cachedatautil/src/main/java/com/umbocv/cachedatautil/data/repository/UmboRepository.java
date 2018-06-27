@@ -8,6 +8,10 @@ import com.umbocv.cachedatautil.data.model.UmboObject;
 
 import java.util.List;
 
+/**
+ * Base repository
+ * @param <T>
+ */
 public interface UmboRepository<T extends UmboObject<T>> {
 
     void initializeData(String authToken);
