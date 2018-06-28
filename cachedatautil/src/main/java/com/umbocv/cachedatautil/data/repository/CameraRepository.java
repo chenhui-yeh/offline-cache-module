@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.umbocv.cachedatautil.AppExecutor;
-import com.umbocv.cachedatautil.data.local.CameraDao;
+import com.umbocv.cachedatautil.data.local.AppDatabase;
 import com.umbocv.cachedatautil.data.model.Camera;
 import com.umbocv.cachedatautil.data.model.CameraByLocation;
 import com.umbocv.cachedatautil.data.remote.RemoteWebService;
@@ -24,7 +24,7 @@ public class CameraRepository implements UmboRepository<Camera> {
 
     private static final String TAG = "CameraRepository";
 
-    private final CameraDao cameraDao;
+    private final AppDatabase appDatabase;
     private final RemoteWebService remoteWebService;
     private final AppExecutor executor;
     private final Context context;
@@ -35,22 +35,22 @@ public class CameraRepository implements UmboRepository<Camera> {
     private MutableLiveData<List<Camera>> downloadedCameras;
     private static boolean initialized = false;
 
-    public static CameraRepository getInstance(CameraDao cameraDao,
+    public static CameraRepository getInstance(AppDatabase appDatabase,
                                         RemoteWebService remoteWebService,
                                         AppExecutor executor,
                                         Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
-                sInstance = new CameraRepository(cameraDao, remoteWebService, executor, context);
+                sInstance = new CameraRepository(appDatabase, remoteWebService, executor, context);
             }
         }
         return sInstance;
     }
-    private CameraRepository(CameraDao cameraDao,
+    private CameraRepository(AppDatabase appDatabase,
                             RemoteWebService remoteWebService,
                             AppExecutor executor,
                             Context context) {
-        this.cameraDao = cameraDao;
+        this.appDatabase = appDatabase;
         this.remoteWebService = remoteWebService;
         this.executor = executor;
         this.context = context;
@@ -70,7 +70,7 @@ public class CameraRepository implements UmboRepository<Camera> {
             executor.diskIO().execute(()->{
                 if (newCameras != null && newCameras.size() > 0) {
                     for (int i = 0; i < newCameras.size(); i++) {
-                        cameraDao.saveData(newCameras.get(i));
+                        appDatabase.cameraDao().saveData(newCameras.get(i));
                     }
                 }
             });
@@ -88,20 +88,20 @@ public class CameraRepository implements UmboRepository<Camera> {
         if (isNetworkAvailable(context)) {
             fetchData(authToken);
         }
-        return cameraDao.loadData();
+        return appDatabase.cameraDao().loadData();
     }
 
     @Override
     public void saveData(Camera... objects) {
         executor.diskIO().execute(() -> {
-            cameraDao.saveData(objects);
+            appDatabase.cameraDao().saveData(objects);
         });
     }
 
     @Override
     public void deleteData(Camera object) {
         executor.diskIO().execute(() -> {
-            cameraDao.deleteData(object);
+            appDatabase.cameraDao().deleteData(object);
         });
     }
 

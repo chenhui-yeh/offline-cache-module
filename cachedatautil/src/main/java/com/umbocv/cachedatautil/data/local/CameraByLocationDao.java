@@ -8,7 +8,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.umbocv.cachedatautil.data.model.CameraByLocation;
-import com.umbocv.cachedatautil.data.model.UmboObject;
 
 import java.util.List;
 

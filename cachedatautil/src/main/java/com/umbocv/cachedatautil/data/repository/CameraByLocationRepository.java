@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.umbocv.cachedatautil.AppExecutor;
-import com.umbocv.cachedatautil.data.local.CameraByLocationDao;
+import com.umbocv.cachedatautil.data.local.AppDatabase;
 import com.umbocv.cachedatautil.data.model.CameraByLocation;
 import com.umbocv.cachedatautil.data.remote.RemoteWebService;
 
@@ -20,11 +20,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // for database operations for camera_group
-public class CameraByLocationRepository implements UmboRepository <CameraByLocation> {
+public class CameraByLocationRepository implements UmboRepository<CameraByLocation> {
 
     private static final String TAG = "CameraByLocationReposit";
-    
-    private final CameraByLocationDao cameraByLocationDao;
+
+    private final AppDatabase appDatabase;
     private final RemoteWebService remoteWebService;
     private final AppExecutor executor;
     private final Context context;
@@ -35,13 +35,13 @@ public class CameraByLocationRepository implements UmboRepository <CameraByLocat
     private MutableLiveData<List<CameraByLocation>> downloadedCamerasByLocation;
     private static boolean initialized = false;
 
-    public static CameraByLocationRepository getInstance(CameraByLocationDao cameraByLocationDao,
+    public static CameraByLocationRepository getInstance(AppDatabase appDatabase,
                                                          RemoteWebService remoteWebService,
                                                          AppExecutor executor,
                                                          Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
-                sInstance = new CameraByLocationRepository(cameraByLocationDao,
+                sInstance = new CameraByLocationRepository(appDatabase,
                         remoteWebService,
                         executor,
                         context);
@@ -50,11 +50,11 @@ public class CameraByLocationRepository implements UmboRepository <CameraByLocat
         return sInstance;
     }
 
-    private CameraByLocationRepository(CameraByLocationDao cameraByLocationDao,
+    private CameraByLocationRepository(AppDatabase appDatabase,
                                        RemoteWebService remoteWebService,
                                        AppExecutor executor,
                                        Context context) {
-        this.cameraByLocationDao = cameraByLocationDao;
+        this.appDatabase = appDatabase;
         this.remoteWebService = remoteWebService;
         this.executor = executor;
         this.context = context;
@@ -75,7 +75,7 @@ public class CameraByLocationRepository implements UmboRepository <CameraByLocat
             if (newCamerasByLocation != null && newCamerasByLocation.size() > 0) {
                 executor.diskIO().execute(() -> {
                     for (int i = 0; i < newCamerasByLocation.size(); i++) {
-                        cameraByLocationDao.saveData(newCamerasByLocation.get(i));
+                        appDatabase.cameraByLocationDao().saveData(newCamerasByLocation.get(i));
                     }
                     Log.d(TAG, "initializeData: saved to database");
                 });
@@ -93,20 +93,20 @@ public class CameraByLocationRepository implements UmboRepository <CameraByLocat
         if (isNetworkAvailable(context)) {
             fetchData(authToken);
         }
-        return cameraByLocationDao.loadData();
+        return appDatabase.cameraByLocationDao().loadData();
     }
 
     @Override
     public void saveData(CameraByLocation... objects) {
         executor.diskIO().execute(()->{
-            cameraByLocationDao.saveData(objects);
+            appDatabase.cameraByLocationDao().saveData(objects);
         });
     }
 
     @Override
     public void deleteData(CameraByLocation object) {
         executor.diskIO().execute(()->{
-            cameraByLocationDao.deleteData(object);
+            appDatabase.cameraByLocationDao().deleteData(object);
         });
     }
 
