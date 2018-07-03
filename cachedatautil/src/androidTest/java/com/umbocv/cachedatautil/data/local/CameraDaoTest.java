@@ -6,6 +6,7 @@ import android.arch.persistence.room.Room;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 
+import com.umbocv.cachedatautil.data.local.dao.CameraDao;
 import com.umbocv.cachedatautil.data.model.Camera;
 
 import org.junit.Before;

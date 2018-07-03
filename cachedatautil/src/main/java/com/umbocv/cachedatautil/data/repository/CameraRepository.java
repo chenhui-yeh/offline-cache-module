@@ -11,7 +11,7 @@ import com.umbocv.cachedatautil.AppExecutor;
 import com.umbocv.cachedatautil.data.local.AppDatabase;
 import com.umbocv.cachedatautil.data.model.Camera;
 import com.umbocv.cachedatautil.data.model.CameraByLocation;
-import com.umbocv.cachedatautil.data.remote.RemoteWebService;
+import com.umbocv.cachedatautil.data.remote.UmboApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +20,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.umbocv.cachedatautil.data.remote.Utils_NetworkStatus.isNetworkAvailable;
+
 public class CameraRepository implements UmboRepository<Camera> {
 
     private static final String TAG = "CameraRepository";
 
     private final AppDatabase appDatabase;
-    private final RemoteWebService remoteWebService;
+    private final UmboApi umboApi;
     private final AppExecutor executor;
     private final Context context;
 
@@ -36,22 +38,22 @@ public class CameraRepository implements UmboRepository<Camera> {
     private static boolean initialized = false;
 
     public static CameraRepository getInstance(AppDatabase appDatabase,
-                                        RemoteWebService remoteWebService,
+                                        UmboApi umboApi,
                                         AppExecutor executor,
                                         Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
-                sInstance = new CameraRepository(appDatabase, remoteWebService, executor, context);
+                sInstance = new CameraRepository(appDatabase, umboApi, executor, context);
             }
         }
         return sInstance;
     }
     private CameraRepository(AppDatabase appDatabase,
-                            RemoteWebService remoteWebService,
+                            UmboApi umboApi,
                             AppExecutor executor,
                             Context context) {
         this.appDatabase = appDatabase;
-        this.remoteWebService = remoteWebService;
+        this.umboApi = umboApi;
         this.executor = executor;
         this.context = context;
 
@@ -92,22 +94,22 @@ public class CameraRepository implements UmboRepository<Camera> {
     }
 
     @Override
-    public void saveData(Camera... objects) {
+    public void saveData(Camera... cameras) {
         executor.diskIO().execute(() -> {
-            appDatabase.cameraDao().saveData(objects);
+            appDatabase.cameraDao().saveData(cameras);
         });
     }
 
     @Override
-    public void deleteData(Camera object) {
+    public void deleteData(Camera camera) {
         executor.diskIO().execute(() -> {
-            appDatabase.cameraDao().deleteData(object);
+            appDatabase.cameraDao().deleteData(camera);
         });
     }
 
     @Override
     public void fetchData(String authToken) {
-        Call<CameraByLocation[]> call = remoteWebService.getCameraResponse(authToken);
+        Call<CameraByLocation[]> call = umboApi.getCameraResponse(authToken);
         List<Camera> fetchedCameraList = new ArrayList<>();
         call.enqueue(new Callback<CameraByLocation[]>() {
             @Override
@@ -138,13 +140,5 @@ public class CameraRepository implements UmboRepository<Camera> {
         });
 
         Log.d(TAG, "fetchData: fetched from web");
-    }
-
-    @Override
-    public boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isAvailable() && activeNetworkInfo.isConnected();
     }
 }

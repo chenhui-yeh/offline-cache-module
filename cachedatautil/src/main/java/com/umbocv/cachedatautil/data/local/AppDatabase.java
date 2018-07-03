@@ -5,6 +5,8 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import com.umbocv.cachedatautil.data.local.dao.CameraByLocationDao;
+import com.umbocv.cachedatautil.data.local.dao.CameraDao;
 import com.umbocv.cachedatautil.data.model.Camera;
 import com.umbocv.cachedatautil.data.model.CameraByLocation;
 

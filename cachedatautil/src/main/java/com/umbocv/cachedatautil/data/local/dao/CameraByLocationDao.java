@@ -1,4 +1,4 @@
-package com.umbocv.cachedatautil.data.local;
+package com.umbocv.cachedatautil.data.local.dao;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;

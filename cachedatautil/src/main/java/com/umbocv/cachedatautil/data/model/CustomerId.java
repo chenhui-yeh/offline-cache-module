@@ -1,5 +1,7 @@
 package com.umbocv.cachedatautil.data.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,16 +10,23 @@ public class CustomerId {
 
     @SerializedName("_id")
     @Expose
+    @NonNull
     private String id;
     @SerializedName("name")
     @Expose
     private String name;
 
+    public CustomerId(@NonNull String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -28,5 +37,7 @@ public class CustomerId {
     public void setName(String name) {
         this.name = name;
     }
+
+
 
 }

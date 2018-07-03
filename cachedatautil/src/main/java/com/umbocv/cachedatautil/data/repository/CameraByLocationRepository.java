@@ -3,14 +3,12 @@ package com.umbocv.cachedatautil.data.repository;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.umbocv.cachedatautil.AppExecutor;
 import com.umbocv.cachedatautil.data.local.AppDatabase;
 import com.umbocv.cachedatautil.data.model.CameraByLocation;
-import com.umbocv.cachedatautil.data.remote.RemoteWebService;
+import com.umbocv.cachedatautil.data.remote.UmboApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +17,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.umbocv.cachedatautil.data.remote.Utils_NetworkStatus.isNetworkAvailable;
+
 // for database operations for camera_group
 public class CameraByLocationRepository implements UmboRepository<CameraByLocation> {
 
     private static final String TAG = "CameraByLocationReposit";
 
     private final AppDatabase appDatabase;
-    private final RemoteWebService remoteWebService;
+    private final UmboApi umboApi;
     private final AppExecutor executor;
     private final Context context;
 
@@ -36,13 +36,13 @@ public class CameraByLocationRepository implements UmboRepository<CameraByLocati
     private static boolean initialized = false;
 
     public static CameraByLocationRepository getInstance(AppDatabase appDatabase,
-                                                         RemoteWebService remoteWebService,
+                                                         UmboApi umboApi,
                                                          AppExecutor executor,
                                                          Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
                 sInstance = new CameraByLocationRepository(appDatabase,
-                        remoteWebService,
+                        umboApi,
                         executor,
                         context);
             }
@@ -51,11 +51,11 @@ public class CameraByLocationRepository implements UmboRepository<CameraByLocati
     }
 
     private CameraByLocationRepository(AppDatabase appDatabase,
-                                       RemoteWebService remoteWebService,
+                                       UmboApi umboApi,
                                        AppExecutor executor,
                                        Context context) {
         this.appDatabase = appDatabase;
-        this.remoteWebService = remoteWebService;
+        this.umboApi = umboApi;
         this.executor = executor;
         this.context = context;
 
@@ -97,22 +97,22 @@ public class CameraByLocationRepository implements UmboRepository<CameraByLocati
     }
 
     @Override
-    public void saveData(CameraByLocation... objects) {
+    public void saveData(CameraByLocation... cameraByLocations) {
         executor.diskIO().execute(()->{
-            appDatabase.cameraByLocationDao().saveData(objects);
+            appDatabase.cameraByLocationDao().saveData(cameraByLocations);
         });
     }
 
     @Override
-    public void deleteData(CameraByLocation object) {
+    public void deleteData(CameraByLocation cameraByLocation) {
         executor.diskIO().execute(()->{
-            appDatabase.cameraByLocationDao().deleteData(object);
+            appDatabase.cameraByLocationDao().deleteData(cameraByLocation);
         });
     }
 
     @Override
     public void fetchData(String authToken) {
-        Call<CameraByLocation[]> call = remoteWebService.getCameraResponse(authToken);
+        Call<CameraByLocation[]> call = umboApi.getCameraResponse(authToken);
         List<CameraByLocation> cameraByLocationList = new ArrayList<>();
 
         call.enqueue(new Callback<CameraByLocation[]>() {
@@ -143,15 +143,6 @@ public class CameraByLocationRepository implements UmboRepository<CameraByLocati
         });
 
         Log.d(TAG, "fetchData: fetched data from web");
-
-    }
-
-    @Override
-    public boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isAvailable() && activeNetworkInfo.isConnected();
 
     }
 

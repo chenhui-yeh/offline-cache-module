@@ -7,7 +7,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 
 // api for getting data from network
-public interface RemoteWebService {
+public interface UmboApi {
     @GET("/api/locations")
     Call<CameraByLocation[]> getCameraResponse(@Header("Authorization") String authToken);
 }

@@ -1,4 +1,4 @@
-package com.umbocv.cachedatautil.data.local;
+package com.umbocv.cachedatautil.data.local.dao;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -31,5 +31,5 @@ public interface CameraDao extends UmboDao<Camera> {
     void deleteData(Camera camera);
 
     @Query("SELECT * from cameras WHERE locationId = :groupId")
-    LiveData<List<Camera>> loadCamerasByGroup (String groupId);
+    LiveData<List<Camera>> loadCamerasByLocation(String groupId);
 }

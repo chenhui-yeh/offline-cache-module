@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.umbocv.cachedatautil.data.local.dao.CameraByLocationDao;
 import com.umbocv.cachedatautil.data.model.CameraByLocation;
 
 import org.junit.Before;

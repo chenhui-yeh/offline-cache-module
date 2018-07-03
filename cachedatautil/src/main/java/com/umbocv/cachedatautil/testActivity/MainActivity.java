@@ -8,7 +8,9 @@ import com.umbocv.cachedatautil.AppExecutor;
 import com.umbocv.cachedatautil.Constants;
 import com.umbocv.cachedatautil.R;
 import com.umbocv.cachedatautil.data.local.AppDatabase;
-import com.umbocv.cachedatautil.data.remote.RemoteWebService;
+import com.umbocv.cachedatautil.data.model.Camera;
+import com.umbocv.cachedatautil.data.model.CameraByLocation;
+import com.umbocv.cachedatautil.data.remote.UmboApi;
 import com.umbocv.cachedatautil.data.repository.CameraByLocationRepository;
 import com.umbocv.cachedatautil.data.repository.CameraRepository;
 import com.umbocv.cachedatautil.data.repository.UmboRepository;
@@ -17,14 +19,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "MainActivity";
     private static Retrofit retrofit;
-    private static RemoteWebService remoteWebService;
-    private static AppDatabase appDatabase;
-    private static AppExecutor executor;
-    private static UmboRepository cameraByLocationRepo;
-    private static UmboRepository cameraRepo;
 
     // UPDATE TOKEN //
     private final String TOKEN = "Bearer " +
@@ -36,14 +31,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        remoteWebService = getRetrofitInstance().create(RemoteWebService.class);
-        appDatabase = AppDatabase.getInstance(this);
-        executor = AppExecutor.getInstance();
+        UmboApi umboApi = getRetrofitInstance().create(UmboApi.class);
+        AppDatabase appDatabase = AppDatabase.getInstance(this);
+        AppExecutor executor = AppExecutor.getInstance();
 
-        cameraByLocationRepo = CameraByLocationRepository.getInstance(appDatabase, remoteWebService, executor, this);
+        UmboRepository<CameraByLocation> cameraByLocationRepo =
+                CameraByLocationRepository.getInstance(appDatabase, umboApi, executor, this);
         cameraByLocationRepo.initializeData(TOKEN);
 
-        cameraRepo = CameraRepository.getInstance(appDatabase, remoteWebService, executor, this);
+        UmboRepository<Camera> cameraRepo =
+                CameraRepository.getInstance(appDatabase, umboApi, executor, this);
         cameraRepo.initializeData(TOKEN);
     }
 

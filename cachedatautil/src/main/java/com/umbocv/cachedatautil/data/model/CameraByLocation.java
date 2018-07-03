@@ -1,5 +1,6 @@
 package com.umbocv.cachedatautil.data.model;
 
+import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -11,7 +12,7 @@ import static com.umbocv.cachedatautil.data.model.CameraByLocation.TABLE_NAME;
 
 /** CameraByLocationDao class for database and network*/
 @Entity(tableName = TABLE_NAME)
-public class CameraByLocation extends UmboObject<CameraByLocation> {
+public class CameraByLocation {
     public static final String TABLE_NAME = "camera_by_location";
 
     @PrimaryKey
@@ -27,6 +28,7 @@ public class CameraByLocation extends UmboObject<CameraByLocation> {
     @SerializedName("customerId")
     @Expose
     @Ignore
+//    @Embedded(prefix = "customerId")
     private CustomerId customerId;
 
     @SerializedName("cameras")
@@ -38,11 +40,12 @@ public class CameraByLocation extends UmboObject<CameraByLocation> {
     @Expose
     private String timezone;
 
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -83,4 +86,5 @@ public class CameraByLocation extends UmboObject<CameraByLocation> {
         this.name = name;
         this.timezone = timezone;
     }
+
 }
