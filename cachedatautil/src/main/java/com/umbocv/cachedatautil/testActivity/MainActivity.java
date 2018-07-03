@@ -8,6 +8,7 @@ import com.umbocv.cachedatautil.AppExecutor;
 import com.umbocv.cachedatautil.Constants;
 import com.umbocv.cachedatautil.R;
 import com.umbocv.cachedatautil.data.local.AppDatabase;
+import com.umbocv.cachedatautil.data.local.dao.UmboDao;
 import com.umbocv.cachedatautil.data.model.Camera;
 import com.umbocv.cachedatautil.data.model.CameraByLocation;
 import com.umbocv.cachedatautil.data.remote.UmboApi;
@@ -35,12 +36,18 @@ public class MainActivity extends AppCompatActivity {
         AppDatabase appDatabase = AppDatabase.getInstance(this);
         AppExecutor executor = AppExecutor.getInstance();
 
+        // daos
+        UmboDao cameraDao = appDatabase.cameraDao();
+        UmboDao cameraByLocationDao = appDatabase.cameraByLocationDao();
+
+        // CameraByLocation repository
         UmboRepository<CameraByLocation> cameraByLocationRepo =
-                CameraByLocationRepository.getInstance(appDatabase, umboApi, executor, this);
+                CameraByLocationRepository.getInstance(cameraByLocationDao, umboApi, executor, this);
         cameraByLocationRepo.initializeData(TOKEN);
 
+        // Camera repository
         UmboRepository<Camera> cameraRepo =
-                CameraRepository.getInstance(appDatabase, umboApi, executor, this);
+                CameraRepository.getInstance(cameraDao, umboApi, executor, this);
         cameraRepo.initializeData(TOKEN);
     }
 

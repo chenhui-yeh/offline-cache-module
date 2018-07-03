@@ -2,13 +2,15 @@ package com.umbocv.cachedatautil.data.repository;
 
 import android.arch.lifecycle.LiveData;
 
+import com.umbocv.cachedatautil.data.model.UmboObject;
+
 import java.util.List;
 
 /**
  * Base repository
  * @param <T> The data type to be manipulated by the repository
  */
-public interface UmboRepository<T> {
+public interface UmboRepository<T extends UmboObject> {
 
     /**
      * initializes the data in database

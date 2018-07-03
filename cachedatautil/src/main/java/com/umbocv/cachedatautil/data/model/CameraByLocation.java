@@ -1,6 +1,5 @@
 package com.umbocv.cachedatautil.data.model;
 
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -12,7 +11,7 @@ import static com.umbocv.cachedatautil.data.model.CameraByLocation.TABLE_NAME;
 
 /** CameraByLocationDao class for database and network*/
 @Entity(tableName = TABLE_NAME)
-public class CameraByLocation {
+public class CameraByLocation extends UmboObject{
     public static final String TABLE_NAME = "camera_by_location";
 
     @PrimaryKey

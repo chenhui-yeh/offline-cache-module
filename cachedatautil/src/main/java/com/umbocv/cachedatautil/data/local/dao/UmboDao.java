@@ -3,10 +3,12 @@ package com.umbocv.cachedatautil.data.local.dao;
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 
+import com.umbocv.cachedatautil.data.model.UmboObject;
+
 import java.util.List;
 
 @Dao
-public interface UmboDao <T> {
+public interface UmboDao <T extends UmboObject> {
 
     LiveData<List<T>> loadData();
 
