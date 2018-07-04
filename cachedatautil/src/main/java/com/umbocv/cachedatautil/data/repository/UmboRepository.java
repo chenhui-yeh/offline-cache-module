@@ -1,8 +1,12 @@
 package com.umbocv.cachedatautil.data.repository;
 
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
 
+import com.umbocv.cachedatautil.AppExecutor;
+import com.umbocv.cachedatautil.data.local.dao.UmboDao;
 import com.umbocv.cachedatautil.data.model.UmboObject;
+import com.umbocv.cachedatautil.data.remote.UmboApi;
 
 import java.util.List;
 
@@ -16,7 +20,7 @@ public interface UmboRepository<T extends UmboObject> {
      * initializes the data in database
      * @param authToken token needed to perform network call from UmboApi
      */
-    void initializeData(String authToken);
+     void initializeData(String authToken);
 
     /**
      * loads data from network if network connection is available
@@ -24,24 +28,24 @@ public interface UmboRepository<T extends UmboObject> {
      * @param authToken token needed to perform network call
      * @return list of items loaded from database
      */
-     LiveData<List<T>> loadData(String authToken);
+    LiveData<List<T>> loadData(String authToken);
 
     /**
      * saves data to database
      * @param objects UmboObjects to be saved in database
      */
-     void saveData(T ... objects);
+    void saveData(T ... objects);
 
     /**
      * deletes data from database
      * @param object object to be deleted from database
      */
-     void deleteData(T object);
+      void deleteData(T object);
 
     /**
      * fetches data from network
      * @param authToken token needed to perform network call from UmboApi
      */
-     void fetchData(String authToken);
+      void fetchData(String authToken);
 
 }
