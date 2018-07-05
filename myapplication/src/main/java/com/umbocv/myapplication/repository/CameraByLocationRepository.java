@@ -1,4 +1,4 @@
-package com.umbocv.cachedatautil.data.repository;
+package com.umbocv.myapplication.repository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -6,6 +6,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.umbocv.cachedatautil.AppExecutor;
+import com.umbocv.cachedatautil.data.local.dao.CameraByLocationDao;
 import com.umbocv.cachedatautil.data.local.dao.UmboDao;
 import com.umbocv.cachedatautil.data.model.CameraByLocation;
 import com.umbocv.cachedatautil.data.remote.UmboApi;
@@ -20,47 +21,45 @@ import retrofit2.Response;
 import static com.umbocv.cachedatautil.data.remote.Utils_NetworkStatus.isNetworkAvailable;
 
 // for database operations for camera_group
-public class CameraByLocationRepository implements UmboRepository<CameraByLocation> {
+public class CameraByLocationRepository extends UmboRepository<CameraByLocation> {
 
     private static final String TAG = "CameraByLocationReposit";
-
-    private final UmboDao cameraByLocationDao;
-    private final UmboApi umboApi;
-    private final AppExecutor executor;
-    private final Context context;
 
     private static final Object LOCK = new Object();
     private static CameraByLocationRepository sInstance;
 
+    private CameraByLocationDao umboDao;
+    private UmboApi umboApi;
+    private AppExecutor executor;
+    private Context context;
+
     private MutableLiveData<List<CameraByLocation>> downloadedCamerasByLocation;
     private static boolean initialized = false;
 
-    public static CameraByLocationRepository getInstance(UmboDao cameraByLocationDao,
-                                                         UmboApi umboApi,
-                                                         AppExecutor executor,
-                                                         Context context) {
-        if (sInstance == null) {
-            synchronized (LOCK) {
-                sInstance = new CameraByLocationRepository(cameraByLocationDao,
-                        umboApi,
-                        executor,
-                        context);
-            }
-        }
-        return sInstance;
-    }
-
-    private CameraByLocationRepository(UmboDao cameraByLocationDao,
+    private CameraByLocationRepository(UmboDao umboDao,
                                        UmboApi umboApi,
                                        AppExecutor executor,
                                        Context context) {
-        this.cameraByLocationDao = cameraByLocationDao;
+        this.umboDao = (CameraByLocationDao) umboDao;
         this.umboApi = umboApi;
         this.executor = executor;
         this.context = context;
 
         downloadedCamerasByLocation = new MutableLiveData<>();
     }
+
+    public static CameraByLocationRepository getInstance(UmboDao umboDao,
+                                                         UmboApi umboApi, AppExecutor executor,
+                                                         Context context) {
+        if (sInstance == null) {
+            synchronized (LOCK){
+                sInstance = new CameraByLocationRepository(umboDao, umboApi, executor, context);
+            }
+        }
+        return sInstance;
+
+    }
+
 
     @Override
     public void initializeData(String authToken) {
@@ -75,7 +74,7 @@ public class CameraByLocationRepository implements UmboRepository<CameraByLocati
             if (newCamerasByLocation != null && newCamerasByLocation.size() > 0) {
                 executor.diskIO().execute(() -> {
                     for (int i = 0; i < newCamerasByLocation.size(); i++) {
-                        cameraByLocationDao.saveData(newCamerasByLocation.get(i));
+                        umboDao.saveData(newCamerasByLocation.get(i));
                     }
                     Log.d(TAG, "initializeData: saved to database");
                 });
@@ -93,20 +92,20 @@ public class CameraByLocationRepository implements UmboRepository<CameraByLocati
         if (isNetworkAvailable(context)) {
             fetchData(authToken);
         }
-        return cameraByLocationDao.loadData();
+        return umboDao.loadData();
     }
 
     @Override
     public void saveData(CameraByLocation... cameraByLocations) {
         executor.diskIO().execute(()->{
-            cameraByLocationDao.saveData(cameraByLocations);
+            umboDao.saveData(cameraByLocations);
         });
     }
 
     @Override
     public void deleteData(CameraByLocation cameraByLocation) {
         executor.diskIO().execute(()->{
-            cameraByLocationDao.deleteData(cameraByLocation);
+            umboDao.deleteData(cameraByLocation);
         });
     }
 

@@ -1,4 +1,4 @@
-package com.umbocv.cachedatautil.data.repository;
+package com.umbocv.myapplication.repository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -6,6 +6,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.umbocv.cachedatautil.AppExecutor;
+import com.umbocv.cachedatautil.data.local.dao.CameraDao;
 import com.umbocv.cachedatautil.data.local.dao.UmboDao;
 import com.umbocv.cachedatautil.data.model.Camera;
 import com.umbocv.cachedatautil.data.model.CameraByLocation;
@@ -20,43 +21,43 @@ import retrofit2.Response;
 
 import static com.umbocv.cachedatautil.data.remote.Utils_NetworkStatus.isNetworkAvailable;
 
-public class CameraRepository implements UmboRepository<Camera> {
+public class CameraRepository extends UmboRepository<Camera> {
 
     private static final String TAG = "CameraRepository";
-
-    private final UmboDao cameraDao;
-    private final UmboApi umboApi;
-    private final AppExecutor executor;
-    private final Context context;
 
     private static final Object LOCK = new Object();
     private static CameraRepository sInstance;
 
+    private CameraDao umboDao;
+    private UmboApi umboApi;
+    private AppExecutor executor;
+    private Context context;
+
     private MutableLiveData<List<Camera>> downloadedCameras;
     private static boolean initialized = false;
 
-    public static CameraRepository getInstance(UmboDao cameraDao,
-                                        UmboApi umboApi,
-                                        AppExecutor executor,
-                                        Context context) {
-        if (sInstance == null) {
-            synchronized (LOCK) {
-                sInstance = new CameraRepository(cameraDao, umboApi, executor, context);
-            }
-        }
-        return sInstance;
-    }
-    private CameraRepository(UmboDao cameraDao,
-                            UmboApi umboApi,
-                            AppExecutor executor,
-                            Context context) {
-        this.cameraDao = cameraDao;
+    private CameraRepository(UmboDao umboDao, UmboApi umboApi, AppExecutor executor, Context context) {
+        this.umboDao = (CameraDao) umboDao;
         this.umboApi = umboApi;
         this.executor = executor;
         this.context = context;
 
         downloadedCameras = new MutableLiveData<>();
     }
+
+
+    public static CameraRepository getInstance(UmboDao umboDao,
+                                               UmboApi umboApi,
+                                               AppExecutor executor,
+                                               Context context) {
+        if (sInstance == null) {
+            synchronized (LOCK){
+                sInstance = new CameraRepository(umboDao, umboApi, executor, context);
+            }
+        }
+        return sInstance;
+    }
+
 
     @Override
     public void initializeData(String authToken) {
@@ -67,10 +68,10 @@ public class CameraRepository implements UmboRepository<Camera> {
 
         LiveData<List<Camera>> networkCameras = downloadedCameras;
         networkCameras.observeForever((List<Camera> newCameras) -> {
-            executor.diskIO().execute(()->{
+            this.executor.diskIO().execute(()->{
                 if (newCameras != null && newCameras.size() > 0) {
                     for (int i = 0; i < newCameras.size(); i++) {
-                        cameraDao.saveData(newCameras.get(i));
+                        umboDao.saveData(newCameras.get(i));
                     }
                 }
             });
@@ -88,20 +89,20 @@ public class CameraRepository implements UmboRepository<Camera> {
         if (isNetworkAvailable(context)) {
             fetchData(authToken);
         }
-        return cameraDao.loadData();
+        return umboDao.loadData();
     }
 
     @Override
     public void saveData(Camera... cameras) {
         executor.diskIO().execute(() -> {
-            cameraDao.saveData(cameras);
+            umboDao.saveData(cameras);
         });
     }
 
     @Override
     public void deleteData(Camera camera) {
         executor.diskIO().execute(() -> {
-            cameraDao.deleteData(camera);
+            umboDao.deleteData(camera);
         });
     }
 

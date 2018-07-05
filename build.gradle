@@ -42,10 +42,8 @@ ext {
     espressoVersion = '3.0.2'
 
     // Architecture Components dependencies
-    roomVersion = "1.1.0"
+    roomVersion = "1.1.1"
     archLifecycleVersion = "1.1.1"
-
-    arch_version = "1.0.0"
 
     firebase_jobdispatcher_version = "0.8.5"
 }

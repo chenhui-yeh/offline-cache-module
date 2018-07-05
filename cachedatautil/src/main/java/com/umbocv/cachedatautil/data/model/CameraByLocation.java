@@ -11,7 +11,7 @@ import static com.umbocv.cachedatautil.data.model.CameraByLocation.TABLE_NAME;
 
 /** CameraByLocationDao class for database and network*/
 @Entity(tableName = TABLE_NAME)
-public class CameraByLocation extends UmboObject{
+public class CameraByLocation {
     public static final String TABLE_NAME = "camera_by_location";
 
     @PrimaryKey
@@ -27,7 +27,6 @@ public class CameraByLocation extends UmboObject{
     @SerializedName("customerId")
     @Expose
     @Ignore
-//    @Embedded(prefix = "customerId")
     private CustomerId customerId;
 
     @SerializedName("cameras")
