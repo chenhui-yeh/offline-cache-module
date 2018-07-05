@@ -36,10 +36,10 @@ public class CameraRepository extends UmboRepository<Camera> {
     private MutableLiveData<List<Camera>> downloadedCameras;
     private static boolean initialized = false;
 
-    private CameraRepository(UmboDao umboDao, UmboApi umboApi, AppExecutor executor, Context context) {
+    private CameraRepository(UmboDao umboDao, Context context) {
+        this.umboApi = super.umboAPI;
+        this.executor = super.executor;
         this.umboDao = (CameraDao) umboDao;
-        this.umboApi = umboApi;
-        this.executor = executor;
         this.context = context;
 
         downloadedCameras = new MutableLiveData<>();
@@ -47,12 +47,10 @@ public class CameraRepository extends UmboRepository<Camera> {
 
 
     public static CameraRepository getInstance(UmboDao umboDao,
-                                               UmboApi umboApi,
-                                               AppExecutor executor,
                                                Context context) {
         if (sInstance == null) {
             synchronized (LOCK){
-                sInstance = new CameraRepository(umboDao, umboApi, executor, context);
+                sInstance = new CameraRepository(umboDao, context);
             }
         }
         return sInstance;
@@ -64,6 +62,7 @@ public class CameraRepository extends UmboRepository<Camera> {
         if (initialized) {
             return;
         }
+
         initialized = true;
 
         LiveData<List<Camera>> networkCameras = downloadedCameras;

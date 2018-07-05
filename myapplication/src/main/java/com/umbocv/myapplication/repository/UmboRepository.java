@@ -1,8 +1,16 @@
 package com.umbocv.myapplication.repository;
 
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
+
+import com.umbocv.cachedatautil.AppExecutor;
+import com.umbocv.cachedatautil.Constants;
+import com.umbocv.cachedatautil.data.remote.UmboApi;
 
 import java.util.List;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Base repository
@@ -10,12 +18,13 @@ import java.util.List;
  */
 public abstract class UmboRepository<T> {
 
-    private static UmboRepository sInstance;
-    private static final Object LOCK = new Object();
+    private static Retrofit retrofit;
 
-    UmboRepository(){
+    UmboApi umboAPI = getRetrofitInstance().create(UmboApi.class);
+    AppExecutor executor = AppExecutor.getInstance();
 
-    }
+    UmboRepository(){}
+
 
     /**
      * initializes the data in database
@@ -49,4 +58,13 @@ public abstract class UmboRepository<T> {
      */
     abstract public void fetchData(String authToken);
 
+    public static Retrofit getRetrofitInstance() {
+        if (retrofit == null) {
+            Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
+                    .baseUrl(Constants.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create());
+            retrofit = retrofitBuilder.build();
+        }
+        return retrofit;
+    }
 }

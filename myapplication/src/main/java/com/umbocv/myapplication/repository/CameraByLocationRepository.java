@@ -37,23 +37,20 @@ public class CameraByLocationRepository extends UmboRepository<CameraByLocation>
     private static boolean initialized = false;
 
     private CameraByLocationRepository(UmboDao umboDao,
-                                       UmboApi umboApi,
-                                       AppExecutor executor,
                                        Context context) {
+        this.umboApi = super.umboAPI;
+        this.executor = super.executor;
         this.umboDao = (CameraByLocationDao) umboDao;
-        this.umboApi = umboApi;
-        this.executor = executor;
         this.context = context;
 
         downloadedCamerasByLocation = new MutableLiveData<>();
     }
 
     public static CameraByLocationRepository getInstance(UmboDao umboDao,
-                                                         UmboApi umboApi, AppExecutor executor,
                                                          Context context) {
         if (sInstance == null) {
             synchronized (LOCK){
-                sInstance = new CameraByLocationRepository(umboDao, umboApi, executor, context);
+                sInstance = new CameraByLocationRepository(umboDao, context);
             }
         }
         return sInstance;

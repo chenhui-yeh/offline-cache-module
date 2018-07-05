@@ -18,43 +18,33 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-    private static Retrofit retrofit;
 
     // UPDATE TOKEN //
-    private final String TOKEN = "bearer " +
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
-            ".eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1MzA2OTU1MjUsImV4cCI6MTUzMDcxMzUyNX0" +
-            ".WNm6cqbEhyiMQygXKdEC1qfRfU9jCPewZN1wKyjSK7U";
+    private final String TOKEN = "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
+            ".eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1MzA3NzIxODQsImV4cCI6MTUzMDc5MDE4NH0" +
+            ".5jjN6jKzIlChY826DjtZegI1i-LfhLkHwa5QZTbf-Ks";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        UmboApi umboApi = getRetrofitInstance().create(UmboApi.class);
         AppDatabase appDatabase = AppDatabase.getInstance(this);
-        AppExecutor executor = AppExecutor.getInstance();
 
+        // DAOs
         UmboDao cameraByLocationDao = appDatabase.cameraByLocationDao();
         UmboDao cameraDao = appDatabase.cameraDao();
 
+        // CameraByLocationRepository
         UmboRepository<CameraByLocation> cameraByLocationUmboRepository =
-                CameraByLocationRepository.getInstance(cameraByLocationDao, umboApi, executor, this);
+                CameraByLocationRepository.getInstance(cameraByLocationDao, this);
         cameraByLocationUmboRepository.initializeData(TOKEN);
 
+        // CameraRepository
         UmboRepository<Camera> cameraUmboRepository =
-                CameraRepository.getInstance(cameraDao, umboApi, executor, this);
+                CameraRepository.getInstance(cameraDao, this);
         cameraUmboRepository.initializeData(TOKEN);
 
     }
 
-    public static Retrofit getRetrofitInstance() {
-        if (retrofit == null) {
-            Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
-                    .baseUrl(Constants.BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create());
-            retrofit = retrofitBuilder.build();
-        }
-        return retrofit;
-    }
 
 }
