@@ -6,7 +6,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 // not used yet
-public class CustomerId {
+public class CustomerId extends UmboObject {
 
     @SerializedName("_id")
     @Expose
