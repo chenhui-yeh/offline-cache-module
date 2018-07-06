@@ -36,9 +36,11 @@ public class CameraRepository extends UmboRepository<Camera> {
     private MutableLiveData<List<Camera>> downloadedCameras;
     private static boolean initialized = false;
 
-    private CameraRepository(UmboDao umboDao, Context context) {
+    private CameraRepository(UmboDao umboDao,
+                             Context context) {
         this.umboApi = super.umboAPI;
         this.executor = super.executor;
+
         this.umboDao = (CameraDao) umboDao;
         this.context = context;
 

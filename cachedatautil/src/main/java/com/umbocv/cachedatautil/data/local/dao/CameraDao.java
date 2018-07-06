@@ -30,6 +30,6 @@ public interface CameraDao extends UmboDao<Camera> {
     @Delete
     void deleteData(Camera camera);
 
-    @Query("SELECT * from cameras WHERE locationId = :groupId")
-    LiveData<List<Camera>> loadCamerasByLocation(String groupId);
+    @Query("SELECT * from cameras WHERE locationId = :locationId")
+    LiveData<List<Camera>> loadCamerasByLocationId (String locationId);
 }

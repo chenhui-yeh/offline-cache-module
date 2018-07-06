@@ -20,10 +20,13 @@ public abstract class UmboRepository<T> {
 
     private static Retrofit retrofit;
 
-    UmboApi umboAPI = getRetrofitInstance().create(UmboApi.class);
-    AppExecutor executor = AppExecutor.getInstance();
+    // instances to be created once for subclasses
+    protected UmboApi umboAPI = getRetrofitInstance().create(UmboApi.class);
+    protected AppExecutor executor = AppExecutor.getInstance();
 
-    UmboRepository(){}
+    UmboRepository(){
+        // default empty constructor
+    }
 
 
     /**
@@ -58,7 +61,7 @@ public abstract class UmboRepository<T> {
      */
     abstract public void fetchData(String authToken);
 
-    public static Retrofit getRetrofitInstance() {
+    private static Retrofit getRetrofitInstance() {
         if (retrofit == null) {
             Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
                     .baseUrl(Constants.BASE_URL)

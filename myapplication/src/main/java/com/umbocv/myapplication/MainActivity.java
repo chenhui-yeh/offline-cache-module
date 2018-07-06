@@ -23,11 +23,13 @@ public class MainActivity extends AppCompatActivity {
     private final String TOKEN = "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
             ".eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1MzA3NzIxODQsImV4cCI6MTUzMDc5MDE4NH0" +
             ".5jjN6jKzIlChY826DjtZegI1i-LfhLkHwa5QZTbf-Ks";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Database
         AppDatabase appDatabase = AppDatabase.getInstance(this);
 
         // DAOs
