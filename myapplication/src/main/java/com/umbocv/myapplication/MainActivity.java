@@ -20,9 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     // UPDATE TOKEN //
-    private final String TOKEN = "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
-            ".eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1MzA3NzIxODQsImV4cCI6MTUzMDc5MDE4NH0" +
-            ".5jjN6jKzIlChY826DjtZegI1i-LfhLkHwa5QZTbf-Ks";
+    private final String TOKEN = "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTBiY2RlMDZjNmJkZDAwMDE3Njg5ZTIiLCJpYXQiOjE1MzA4NTE4NTgsImV4cCI6MTUzMDg2OTg1OH0.skDlIUy3jUXM_uUv5Tsd03rmM6S8CZpzFLpKa-KpHN0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

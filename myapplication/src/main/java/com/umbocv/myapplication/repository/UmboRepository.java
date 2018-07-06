@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.umbocv.cachedatautil.AppExecutor;
 import com.umbocv.cachedatautil.Constants;
+import com.umbocv.cachedatautil.data.local.dao.UmboDao;
 import com.umbocv.cachedatautil.data.remote.UmboApi;
 
 import java.util.List;

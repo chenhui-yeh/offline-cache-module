@@ -40,9 +40,8 @@ public class CameraByLocationRepository extends UmboRepository<CameraByLocation>
                                        Context context) {
         this.umboApi = super.umboAPI;
         this.executor = super.executor;
-
-        this.umboDao = (CameraByLocationDao) umboDao;
         this.context = context;
+        this.umboDao = (CameraByLocationDao) umboDao;
 
         downloadedCamerasByLocation = new MutableLiveData<>();
     }

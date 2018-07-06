@@ -38,11 +38,11 @@ public class CameraRepository extends UmboRepository<Camera> {
 
     private CameraRepository(UmboDao umboDao,
                              Context context) {
+
         this.umboApi = super.umboAPI;
         this.executor = super.executor;
-
-        this.umboDao = (CameraDao) umboDao;
         this.context = context;
+        this.umboDao = (CameraDao) umboDao;
 
         downloadedCameras = new MutableLiveData<>();
     }
