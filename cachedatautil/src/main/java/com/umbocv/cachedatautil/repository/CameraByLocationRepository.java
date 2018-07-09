@@ -23,8 +23,6 @@ import static com.umbocv.cachedatautil.data.remote.Utils_NetworkStatus.isNetwork
 // for database operations for camera_group
 public class CameraByLocationRepository extends UmboRepository<CameraByLocation> {
 
-    private static final String TAG = "CameraByLocationReposit";
-
     private static final Object LOCK = new Object();
     private static CameraByLocationRepository sInstance;
 
@@ -73,7 +71,6 @@ public class CameraByLocationRepository extends UmboRepository<CameraByLocation>
                     for (int i = 0; i < newCamerasByLocation.size(); i++) {
                         umboDao.saveData(newCamerasByLocation.get(i));
                     }
-                    Log.d(TAG, "initializeData: saved to database");
                 });
             }
         });
@@ -113,23 +110,23 @@ public class CameraByLocationRepository extends UmboRepository<CameraByLocation>
 
         call.enqueue(new Callback<CameraByLocation[]>() {
             @Override
-            public void onResponse(Call<CameraByLocation[]> call, Response<CameraByLocation[]> response) {
-                if (response != null && response.isSuccessful()) {
+            public void onResponse(Call<CameraByLocation[]> call,
+                                   Response<CameraByLocation[]> response) {
+                if (response.isSuccessful()) {
                     CameraByLocation[] fetchedCameraByLocationArray = response.body();
 
                     if (fetchedCameraByLocationArray != null) {
                         for (int i = 0; i < fetchedCameraByLocationArray.length; i++) {
-                            CameraByLocation cameraByLocation = new CameraByLocation (fetchedCameraByLocationArray[i].getId(),
+                            CameraByLocation cameraByLocation =
+                                    new CameraByLocation (fetchedCameraByLocationArray[i].getId(),
                                     fetchedCameraByLocationArray[i].getName(),
                                     fetchedCameraByLocationArray[i].getTimezone());
                             cameraByLocationList.add(cameraByLocation);
-                            Log.d(TAG, "onResponse: " + "\n id: " + cameraByLocation.getId() + "\n name: " + cameraByLocation.getName());
                         }
                     }
                 }
 
                 downloadedCamerasByLocation.postValue(cameraByLocationList);
-                Log.d(TAG, "onResponse: updated data");
             }
 
             @Override
@@ -137,8 +134,6 @@ public class CameraByLocationRepository extends UmboRepository<CameraByLocation>
 
             }
         });
-
-        Log.d(TAG, "fetchData: fetched data from web");
 
     }
 

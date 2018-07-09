@@ -23,8 +23,6 @@ import static com.umbocv.cachedatautil.data.remote.Utils_NetworkStatus.isNetwork
 
 public class CameraRepository extends UmboRepository<Camera> {
 
-    private static final String TAG = "CameraRepository";
-
     private static final Object LOCK = new Object();
     private static CameraRepository sInstance;
 
@@ -81,8 +79,6 @@ public class CameraRepository extends UmboRepository<Camera> {
         if (isNetworkAvailable(context)) {
             fetchData(authToken);
         }
-
-        Log.d(TAG, "initializeData: initialized data");
     }
 
     @Override
@@ -130,7 +126,6 @@ public class CameraRepository extends UmboRepository<Camera> {
                     }
                 }
                 downloadedCameras.postValue(fetchedCameraList);
-                Log.d(TAG, "onResponse: updated data");
             }
 
             @Override
@@ -138,7 +133,5 @@ public class CameraRepository extends UmboRepository<Camera> {
 
             }
         });
-
-        Log.d(TAG, "fetchData: fetched from web");
     }
 }
